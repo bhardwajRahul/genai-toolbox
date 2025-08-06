@@ -46,8 +46,9 @@ It&amp;rsquo;s compatible with the following sources:&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://bhardwajRahul.github.io/genai-toolbox/resources/sources/bigquery/">bigquery&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;p>&lt;code>bigquery-execute-sql&lt;/code> takes one input parameter &lt;code>sql&lt;/code> and runs the sql
-statement against the &lt;code>source&lt;/code>.&lt;/p>
+&lt;p>&lt;code>bigquery-execute-sql&lt;/code> takes a required &lt;code>sql&lt;/code> input parameter and runs the SQL
+statement against the configured &lt;code>source&lt;/code>. It also supports an optional &lt;code>dry_run&lt;/code>
+parameter to validate a query without executing it.&lt;/p>
 &lt;h2 id="example">Example&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">tools&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">execute_sql_tool&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
@@ -441,6 +442,11 @@ Execute pre-defined prepared SQL queries in MySQL.&lt;/p>
 Run parameterized SQL queries in Cloud SQL for MySQL.&lt;/p>
 &lt;/li>
 &lt;/ul>
+&lt;h3 id="pre-built-configurations">Pre-built Configurations&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://googleapis.github.io/genai-toolbox/how-to/connect-ide/cloud_sql_mysql_mcp/">Cloud SQL for MySQL using MCP&lt;/a>&lt;br>
+Connect your IDE to Cloud SQL for MySQL using Toolbox.&lt;/li>
+&lt;/ul>
 &lt;h2 id="requirements">Requirements&lt;/h2>
 &lt;h3 id="iam-permissions">IAM Permissions&lt;/h3>
 &lt;p>By default, this source uses the &lt;a href="https://github.com/GoogleCloudPlatform/cloud-sql-go-connector">Cloud SQL Go Connector&lt;/a> to
@@ -462,6 +468,11 @@ Execute SQL queries as prepared statements in PostgreSQL.&lt;/p>
 &lt;p>&lt;a href="https://bhardwajRahul.github.io/genai-toolbox/resources/tools/postgres/postgres-execute-sql/">&lt;code>postgres-execute-sql&lt;/code>&lt;/a>&lt;br>
 Run parameterized SQL statements in PostgreSQL.&lt;/p>
 &lt;/li>
+&lt;/ul>
+&lt;h3 id="pre-built-configurations">Pre-built Configurations&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://googleapis.github.io/genai-toolbox/how-to/connect-ide/cloud_sql_pg_mcp/">Cloud SQL for Postgres using MCP&lt;/a>&lt;br>
+Connect your IDE to Cloud SQL for Postgres using Toolbox.&lt;/li>
 &lt;/ul>
 &lt;h2 id="requirements">Requirements&lt;/h2>
 &lt;h3 id="iam-permissions">IAM Permissions&lt;/h3>
@@ -2328,6 +2339,11 @@ Execute SQL queries as prepared statements in PostgreSQL.&lt;/p>
 &lt;p>&lt;a href="https://bhardwajRahul.github.io/genai-toolbox/resources/tools/postgres/postgres-execute-sql/">&lt;code>postgres-execute-sql&lt;/code>&lt;/a>&lt;br>
 Run parameterized SQL statements in PostgreSQL.&lt;/p>
 &lt;/li>
+&lt;/ul>
+&lt;h3 id="pre-built-configurations">Pre-built Configurations&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://googleapis.github.io/genai-toolbox/how-to/connect-ide/postgres_mcp/">PostgreSQL using MCP&lt;/a>&lt;br>
+Connect your IDE to PostgreSQL using Toolbox.&lt;/li>
 &lt;/ul>
 &lt;h2 id="requirements">Requirements&lt;/h2>
 &lt;h3 id="database-user">Database User&lt;/h3>
