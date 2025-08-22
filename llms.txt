@@ -13,7 +13,7 @@ How to get started with Toolbox.
 - [Go Quickstart (Local)](https://bhardwajRahul.github.io/genai-toolbox/getting-started/local_quickstart_go/): How to get started running Toolbox locally with [Go](https://github.com/googleapis/mcp-toolbox-sdk-go), PostgreSQL, and orchestration frameworks such as [LangChain Go](https://tmc.github.io/langchaingo/docs/), [GenkitGo](https://genkit.dev/go/docs/get-started-go/), [Go GenAI](https://github.com/googleapis/go-genai) and [OpenAI Go](https://github.com/openai/openai-go).
 - [Quickstart (MCP)](https://bhardwajRahul.github.io/genai-toolbox/getting-started/mcp_quickstart/): How to get started running Toolbox locally with MCP Inspector.
 - [Configuration](https://bhardwajRahul.github.io/genai-toolbox/getting-started/configure/): How to configure Toolbox's tools.yaml file.
-- [](https://bhardwajRahul.github.io/genai-toolbox/getting-started/quickstart/shared/cloud_setup/): - [](https://bhardwajRahul.github.io/genai-toolbox/getting-started/quickstart/shared/configure_toolbox/): - [](https://bhardwajRahul.github.io/genai-toolbox/getting-started/quickstart/shared/database_setup/): 
+
 ### Concepts
 
 Some core concepts in Toolbox
@@ -55,6 +55,7 @@ List of reference documentation for resources in Toolbox.
   - [couchbase](https://bhardwajRahul.github.io/genai-toolbox/resources/sources/couchbase/): A "couchbase" source connects to a Couchbase database.
   - [Dataplex](https://bhardwajRahul.github.io/genai-toolbox/resources/sources/dataplex/): Dataplex Universal Catalog is a unified, intelligent governance solution for data and AI assets in Google Cloud. Dataplex Universal Catalog powers AI, analytics, and business intelligence at scale.
   - [Dgraph](https://bhardwajRahul.github.io/genai-toolbox/resources/sources/dgraph/): Dgraph is fully open-source, built-for-scale graph database for Gen AI workloads
+  - [Firebird](https://bhardwajRahul.github.io/genai-toolbox/resources/sources/firebird/): Firebird is a powerful, cross-platform, and open-source relational database.
   - [Firestore](https://bhardwajRahul.github.io/genai-toolbox/resources/sources/firestore/): Firestore is a NoSQL document database built for automatic scaling, high performance, and ease of application development. It's a fully managed, serverless database that supports mobile, web, and server development.
   - [HTTP](https://bhardwajRahul.github.io/genai-toolbox/resources/sources/http/): The HTTP source enables the Toolbox to retrieve data from a remote server using HTTP requests.
   - [Looker](https://bhardwajRahul.github.io/genai-toolbox/resources/sources/looker/): Looker is a business intelligence tool that also provides a semantic layer.
@@ -77,6 +78,7 @@ List of reference documentation for resources in Toolbox.
   - [Couchbase](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/couchbase/): Tools that work with Couchbase Sources.
   - [Dataplex](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/dataplex/): Tools that work with Dataplex Sources.
   - [Dgraph](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/dgraph/): Tools that work with Dgraph Sources.
+  - [Firebird](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/firebird/): Tools that work with Firebird Sources.
   - [Firestore](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/firestore/): Tools that work with Firestore Sources.
   - [HTTP](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/http/): Tools that work with HTTP Sources.
   - [Looker](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/looker/): Tools that work with Looker Sources.
