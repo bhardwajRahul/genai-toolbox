@@ -90,6 +90,7 @@ List of reference documentation for resources in Toolbox.
   - [Cloud Monitoring](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/cloudmonitoring/): Tools that work with Cloud Monitoring source.
   - [Cloud SQL](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/cloudsql/): Tools that work with Cloud SQL. 
   - [Couchbase](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/couchbase/): Tools that work with Couchbase Sources.
+  - [Dataform](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/dataform/): Tools that work with Dataform.
   - [Dataplex](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/dataplex/): Tools that work with Dataplex Sources.
   - [Dgraph](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/dgraph/): Tools that work with Dgraph Sources.
   - [Firebird](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/firebird/): Tools that work with Firebird Sources.
