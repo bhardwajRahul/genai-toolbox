@@ -123,6 +123,8 @@ List of reference documentation for resources in Toolbox.
   - [Utility tools](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/utility/): Tools that provide utility.
   - [Valkey](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/valkey/): Tools that work with Valkey Sources.
   - [YugabyteDB](https://bhardwajRahul.github.io/genai-toolbox/resources/tools/yuagbytedb/): Tools that work with Valkey Sources.
+- [Prompts](https://bhardwajRahul.github.io/genai-toolbox/resources/prompts/): Prompts allow servers to provide structured messages and instructions for interacting with language models.
+  - [Custom](https://bhardwajRahul.github.io/genai-toolbox/resources/prompts/custom/): Custom prompts defined by the user.
 
 ### Samples
 
