@@ -80,7 +80,7 @@ redeploying your application.
 
 ## Getting Started
 
-### (Non-production) Running Toolbox
+### Quickstart: Running Toolbox using NPX 
 
 You can run Toolbox directly with a [configuration file](../configure.md):
 
@@ -795,7 +795,7 @@ runtime](https://research.google.com/colaboratory/local-runtimes.html).
     {{< tabpane persist=header >}}
 {{< tab header="ADK" lang="bash" >}}
 
-pip install toolbox-core
+pip install google-adk[toolbox]
 {{< /tab >}}
 {{< tab header="Langchain" lang="bash" >}}
 
@@ -816,7 +816,7 @@ pip install toolbox-core
     {{< tabpane persist=header >}}
 {{< tab header="ADK" lang="bash" >}}
 
-pip install google-adk
+# No other dependencies required for ADK
 {{< /tab >}}
 {{< tab header="Langchain" lang="bash" >}}
 
@@ -5689,10 +5689,10 @@ with the necessary configuration for deployment to Vertex AI Agent Engine.
     process will generate deployment configuration files (like a `Makefile` and
     `Dockerfile`) in your project directory.
 
-4.  Add `toolbox-core` as a dependency to the new project:
+4.  Add `google-adk[toolbox]` as a dependency to the new project:
 
     ```bash
-    uv add toolbox-core
+    uv add google-adk[toolbox]
     ```
 
 ## Step 3: Configure Google Cloud Authentication
@@ -5738,22 +5738,23 @@ authentication token.
     ```python
     from google.adk import Agent
     from google.adk.apps import App
-    from toolbox_core import ToolboxSyncClient, auth_methods
+    from google.adk.tools.toolbox_toolset import ToolboxToolset
+    from toolbox_adk import CredentialStrategy
 
     # TODO(developer): Replace with your Toolbox Cloud Run Service URL
     TOOLBOX_URL = "https://your-toolbox-service-xyz.a.run.app"
 
-    # Initialize the client with the Cloud Run URL and Auth headers
-    client = ToolboxSyncClient(
-        TOOLBOX_URL, 
-        client_headers={"Authorization": auth_methods.get_google_id_token(TOOLBOX_URL)}
+    # Initialize the toolset with Workload Identity (generates ID token for the URL)
+    toolset = ToolboxToolset(
+        server_url=TOOLBOX_URL,
+        credentials=CredentialStrategy.workload_identity(target_audience=TOOLBOX_URL)
     )
 
     root_agent = Agent(
         name='root_agent',
         model='gemini-2.5-flash',
         instruction="You are a helpful AI assistant designed to provide accurate and useful information.",
-        tools=client.load_toolset(),
+        tools=[toolset],
     )
 
     app = App(root_agent=root_agent, name="my_agent")
@@ -7487,6 +7488,75 @@ useClientOAuth: true
 | allowedFhirStores  | []string |    false     | An optional list of FHIR store IDs that tools using this source are allowed to access. If provided, any tool operation attempting to access a store not in this list will be rejected. If a single store is provided, it will be treated as the default for prebuilt tools.  |
 | allowedDicomStores | []string |    false     | An optional list of DICOM store IDs that tools using this source are allowed to access. If provided, any tool operation attempting to access a store not in this list will be rejected. If a single store is provided, it will be treated as the default for prebuilt tools. |
 | useClientOAuth     |   bool   |    false     | If true, forwards the client's OAuth access token from the "Authorization" header to downstream queries.                                                                                                                                                                     |
+
+
+# Cloud Logging Admin
+The Cloud Logging Admin source enables tools to interact with the Cloud Logging API, allowing for the retrieval of log names, monitored resource types, and the querying of log data.
+
+
+## About
+
+The Cloud Logging Admin source provides a client to interact with the [Google
+Cloud Logging API](https://cloud.google.com/logging/docs). This allows tools to list log names, monitored resource types, and query log entries.
+
+Authentication can be handled in two ways:
+
+1.  **Application Default Credentials (ADC):** By default, the source uses ADC
+    to authenticate with the API.
+2.  **Client-side OAuth:** If `useClientOAuth` is set to `true`, the source will
+    expect an OAuth 2.0 access token to be provided by the client (e.g., a web
+    browser) for each request.
+
+## Available Tools
+
+- [`cloud-logging-admin-list-log-names`](../tools/cloudloggingadmin/cloud-logging-admin-list-log-names.md)
+  Lists the log names in the project.
+
+- [`cloud-logging-admin-list-resource-types`](../tools/cloudloggingadmin/cloud-logging-admin-list-resource-types.md)
+  Lists the monitored resource types.
+
+- [`cloud-logging-admin-query-logs`](../tools/cloudloggingadmin/cloud-logging-admin-query-logs.md)
+  Queries log entries.
+
+## Example
+
+Initialize a Cloud Logging Admin source that uses ADC:
+
+```yaml
+kind: sources
+name: my-cloud-logging
+type: cloud-logging-admin
+project: my-project-id
+```
+
+Initialize a Cloud Logging Admin source that uses client-side OAuth:
+
+```yaml
+kind: sources
+name: my-oauth-cloud-logging
+type: cloud-logging-admin
+project: my-project-id
+useClientOAuth: true
+```
+
+Initialize a Cloud Logging Admin source that uses service account impersonation:
+
+```yaml
+kind: sources
+name: my-impersonated-cloud-logging
+type: cloud-logging-admin
+project: my-project-id
+impersonateServiceAccount: "my-service-account@my-project.iam.gserviceaccount.com"
+```
+
+## Reference
+
+| **field**                   | **type** | **required** | **description**                                                                                                                                                                                 |
+|-----------------------------|:--------:|:------------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| type                        |  string  |     true     | Must be "cloud-logging-admin".                                                                                                                                                                  |
+| project                     |  string  |     true     | ID of the GCP project.                                                                                                                                                                          |
+| useClientOAuth              | boolean  |    false     | If true, the source will use client-side OAuth for authorization. Otherwise, it will use Application Default Credentials. Defaults to `false`. Cannot be used with `impersonateServiceAccount`. |
+| impersonateServiceAccount   |  string  |    false     | The service account to impersonate for API calls. Cannot be used with `useClientOAuth`.                                                                                                         |
 
 
 # Cloud Monitoring
@@ -11287,6 +11357,114 @@ Tools that work with Valkey Sources.
 
 
 
+# cloud-logging-admin-list-log-names
+A "cloud-logging-admin-list-log-names" tool lists the log names in the project.
+
+
+## About
+
+The `cloud-logging-admin-list-log-names` tool lists the log names available in the Google Cloud project.
+It's compatible with the following sources:
+
+- [cloud-logging-admin](../../sources/cloud-logging-admin.md)
+
+## Example
+
+```yaml
+kind: tools
+name: list_log_names
+type: cloud-logging-admin-list-log-names
+source: my-cloud-logging
+description: Lists all log names in the project.
+```
+
+## Reference
+
+| **field**   | **type** | **required** | **description**                                    |
+|-------------|:--------:|:------------:|----------------------------------------------------|
+| type        |  string  |     true     | Must be "cloud-logging-admin-list-log-names".      |
+| source      |  string  |     true     | Name of the cloud-logging-admin source.            |
+| description |  string  |     true     | Description of the tool that is passed to the LLM. |
+
+### Parameters
+
+| **parameter** | **type** | **required** | **description** |
+|:--------------|:--------:|:------------:|:----------------|
+| limit | integer | false | Maximum number of log entries to return (default: 200). |
+
+
+# cloud-logging-admin-list-resource-types
+A "cloud-logging-admin-list-resource-types" tool lists the monitored resource types.
+
+
+## About
+
+The `cloud-logging-admin-list-resource-types` tool lists the monitored resource types available in Google Cloud Logging.
+It's compatible with the following sources:
+
+- [cloud-logging-admin](../../sources/cloud-logging-admin.md)
+
+## Example
+
+```yaml
+kind: tools
+name: list_resource_types
+type: cloud-logging-admin-list-resource-types
+source: my-cloud-logging
+description: Lists monitored resource types.
+```
+
+## Reference
+
+| **field**   | **type** | **required** | **description**                                    |
+|-------------|:--------:|:------------:|----------------------------------------------------|
+| type        |  string  |     true     | Must be "cloud-logging-admin-list-resource-types".|
+| source      |  string  |     true     | Name of the cloud-logging-admin source.            |
+| description |  string  |     true     | Description of the tool that is passed to the LLM. |
+
+
+
+# cloud-logging-admin-query-logs
+A "cloud-logging-admin-query-logs" tool queries log entries.
+
+
+## About
+
+The `cloud-logging-admin-query-logs` tool allows you to query log entries from Google Cloud Logging using the advanced logs filter syntax.
+It's compatible with the following sources:
+
+- [cloud-logging-admin](../../sources/cloud-logging-admin.md)
+
+## Example
+
+```yaml
+kind: tools
+name: query_logs
+type: cloud-logging-admin-query-logs
+source: my-cloud-logging
+description: Queries log entries from Cloud Logging.
+```
+
+## Reference
+
+| **field**   | **type** | **required** | **description**                                    |
+|-------------|:--------:|:------------:|----------------------------------------------------|
+| type        |  string  |     true     | Must be "cloud-logging-admin-query-logs".          |
+| source      |  string  |     true     | Name of the cloud-logging-admin source.            |
+| description |  string  |     true     | Description of the tool that is passed to the LLM. |
+
+### Parameters
+
+| **parameter** | **type** | **required** | **description** |
+|:--------------|:--------:|:------------:|:----------------|
+| filter | string | false | Cloud Logging filter query. Common fields: resource.type, resource.labels.*, logName, severity, textPayload, jsonPayload.*, protoPayload.*, labels.*, httpRequest.*. Operators: =, !=, <, <=, >, >=, :, =~, AND, OR, NOT. |
+| newestFirst | boolean | false | Set to true for newest logs first. Defaults to oldest first. |
+| startTime | string | false | Start time in RFC3339 format (e.g., 2025-12-09T00:00:00Z). Defaults to 30 days ago. |
+| endTime | string | false | End time in RFC3339 format (e.g., 2025-12-09T23:59:59Z). Defaults to now. |
+| verbose | boolean | false | Include additional fields (insertId, trace, spanId, httpRequest, labels, operation, sourceLocation). Defaults to false. |
+| limit | integer | false | Maximum number of log entries to return. Default: `200`. |
+
+
 # Prompts
 Prompts allow servers to provide structured messages and instructions for interacting with language models.
 
@@ -12152,7 +12330,7 @@ pip install toolbox-llamaindex
 {{< /tab >}}
 {{< tab header="ADK" lang="bash" >}}
 
-pip install google-adk
+pip install google-adk[toolbox]
 {{< /tab >}}
 
 {{< /tabpane >}}
@@ -12192,7 +12370,7 @@ pip install llama-index-llms-google-genai
 
 {{< /tab >}}
 {{< tab header="ADK" lang="bash" >}}
-pip install toolbox-core
+# No other dependencies required for ADK
 {{< /tab >}}
 {{< /tabpane >}}
 
@@ -12434,8 +12612,8 @@ from google.adk.agents import Agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.artifacts.in_memory_artifact_service import InMemoryArtifactService
+from google.adk.tools.toolbox_toolset import ToolboxToolset
 from google.genai import types # For constructing message content
-from toolbox_core import ToolboxSyncClient
 
 import os
 os.environ['GOOGLE_GENAI_USE_VERTEXAI'] = 'True'
@@ -12450,46 +12628,45 @@ os.environ['GOOGLE_CLOUD_LOCATION'] = 'us-central1'
 
 # --- Load Tools from Toolbox ---
 
-# TODO(developer): Ensure the Toolbox server is running at <http://127.0.0.1:5000>
+# TODO(developer): Ensure the Toolbox server is running at http://127.0.0.1:5000
+toolset = ToolboxToolset(server_url="http://127.0.0.1:5000")
 
-with ToolboxSyncClient("<http://127.0.0.1:5000>") as toolbox_client:
-    # TODO(developer): Replace "my-toolset" with the actual ID of your toolset as configured in your MCP Toolbox server.
-    agent_toolset = toolbox_client.load_toolset("my-toolset")
+# --- Define the Agent's Prompt ---
+prompt = """
+  You're a helpful hotel assistant. You handle hotel searching, booking and
+  cancellations. When the user searches for a hotel, mention it's name, id,
+  location and price tier. Always mention hotel ids while performing any
+  searches. This is very important for any operations. For any bookings or
+  cancellations, please provide the appropriate confirmation. Be sure to
+  update checkin or checkout dates if mentioned by the user.
+  Don't ask for confirmations from the user.
+"""
 
-    # --- Define the Agent's Prompt ---
-    prompt = """
-      You're a helpful hotel assistant. You handle hotel searching, booking and
-      cancellations. When the user searches for a hotel, mention it's name, id,
-      location and price tier. Always mention hotel ids while performing any
-      searches. This is very important for any operations. For any bookings or
-      cancellations, please provide the appropriate confirmation. Be sure to
-      update checkin or checkout dates if mentioned by the user.
-      Don't ask for confirmations from the user.
-    """
+# --- Configure the Agent ---
 
-    # --- Configure the Agent ---
+root_agent = Agent(
+    model='gemini-2.0-flash-001',
+    name='hotel_agent',
+    description='A helpful AI assistant that can search and book hotels.',
+    instruction=prompt,
+    tools=[toolset], # Pass the loaded toolset
+)
 
-    root_agent = Agent(
-        model='gemini-2.0-flash-001',
-        name='hotel_agent',
-        description='A helpful AI assistant that can search and book hotels.',
-        instruction=prompt,
-        tools=agent_toolset, # Pass the loaded toolset
-    )
+# --- Initialize Services for Running the Agent ---
+session_service = InMemorySessionService()
+artifacts_service = InMemoryArtifactService()
 
-    # --- Initialize Services for Running the Agent ---
-    session_service = InMemorySessionService()
-    artifacts_service = InMemoryArtifactService()
+runner = Runner(
+    app_name='hotel_agent',
+    agent=root_agent,
+    artifact_service=artifacts_service,
+    session_service=session_service,
+)
+
+async def main():
     # Create a new session for the interaction.
-    session = session_service.create_session(
+    session = await session_service.create_session(
         state={}, app_name='hotel_agent', user_id='123'
-    )
-
-    runner = Runner(
-        app_name='hotel_agent',
-        agent=root_agent,
-        artifact_service=artifacts_service,
-        session_service=session_service,
     )
 
     # --- Define Queries and Run the Agent ---
@@ -12514,6 +12691,10 @@ with ToolboxSyncClient("<http://127.0.0.1:5000>") as toolbox_client:
 
         for text in responses:
           print(text)
+
+import asyncio
+if __name__ == "__main__":
+    asyncio.run(main())
 {{< /tab >}}
 {{< /tabpane >}}
 
