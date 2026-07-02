@@ -940,6 +940,12 @@ names, or other parts of the query.&lt;/p&gt;</description></item><item><title>C
 					&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
 			&lt;/tr&gt;
 			&lt;tr&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;--enable-draft-specs&lt;/code&gt;&lt;/td&gt;
+					&lt;td&gt;Opt-in and test upcoming draft MCP specifications.&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
 					&lt;td&gt;&lt;code&gt;-v&lt;/code&gt;&lt;/td&gt;
 					&lt;td&gt;&lt;code&gt;--version&lt;/code&gt;&lt;/td&gt;
 					&lt;td&gt;version for toolbox&lt;/td&gt;
@@ -3470,7 +3476,46 @@ CRITICAL: Access the results only via the nested public GA fields &lt;code&gt;da
 
 
 &lt;div class="compatibility-section"&gt;
- &lt;p&gt;This tool can be used with the following database sources:&lt;/p&gt;</description></item><item><title>dataplex-get-data-profile</title><link>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-get-data-profile/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-get-data-profile/</guid><description>&lt;h2 id="about"&gt;About&lt;/h2&gt;
+ &lt;p&gt;This tool can be used with the following database sources:&lt;/p&gt;</description></item><item><title>dataplex-get-data-product</title><link>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-get-data-product/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-get-data-product/</guid><description>&lt;h2 id="about"&gt;About&lt;/h2&gt;
+&lt;p&gt;A &lt;code&gt;dataplex-get-data-product&lt;/code&gt; tool retrieves detailed metadata for a specific Data Product in Knowledge Catalog (formerly known as Dataplex).&lt;/p&gt;
+&lt;p&gt;View the &lt;a href="https://docs.cloud.google.com/dataplex/docs/data-products-overview"&gt;Data Products guide&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;h2 id="compatible-sources"&gt;Compatible Sources&lt;/h2&gt;
+
+
+
+
+
+&lt;div class="compatibility-section"&gt;
+ &lt;p&gt;This tool can be used with the following database sources:&lt;/p&gt;
+
+ &lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Source Name&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ 
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a href="https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/source/"&gt;Knowledge Catalog (formerly known as Dataplex) Source&lt;/a&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+
+ 
+
+ 
+ 
+ &lt;/tbody&gt;
+ &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h2 id="requirements"&gt;Requirements&lt;/h2&gt;
+&lt;h3 id="iam-permissions"&gt;IAM Permissions&lt;/h3&gt;
+&lt;p&gt;Knowledge Catalog uses &lt;a href="https://cloud.google.com/dataplex/docs/iam-and-access-control"&gt;Identity and Access Management (IAM)&lt;/a&gt; to control
+user and group access to Knowledge Catalog resources. Toolbox will use your
+&lt;a href="https://cloud.google.com/docs/authentication#adc"&gt;Application Default Credentials (ADC)&lt;/a&gt; to authorize and authenticate when
+interacting with &lt;a href="https://cloud.google.com/dataplex"&gt;Knowledge Catalog&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>dataplex-get-data-profile</title><link>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-get-data-profile/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-get-data-profile/</guid><description>&lt;h2 id="about"&gt;About&lt;/h2&gt;
 &lt;p&gt;A &lt;code&gt;dataplex-get-data-profile&lt;/code&gt; tool retrieves the results of a completed Data Profile scan.&lt;/p&gt;
 &lt;p&gt;WARNING: You must verify the execution run has succeeded (via &lt;code&gt;dataplex-get-run-status&lt;/code&gt;) before calling this tool, otherwise the results will be empty.
 CRITICAL: Access the results via the nested public fields &lt;code&gt;dataProfileResult.profile.fields&lt;/code&gt; inside the returned DataScan.&lt;/p&gt;
@@ -3575,9 +3620,48 @@ WARNING: This only tracks the creation of the scan template, NOT the actual back
 
 
 &lt;div class="compatibility-section"&gt;
- &lt;p&gt;This tool can be used with the following database sources:&lt;/p&gt;</description></item><item><title>dataplex-list-data-products</title><link>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-list-data-products/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-list-data-products/</guid><description>&lt;h2 id="about"&gt;About&lt;/h2&gt;
+ &lt;p&gt;This tool can be used with the following database sources:&lt;/p&gt;</description></item><item><title>dataplex-list-data-assets</title><link>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-list-data-assets/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-list-data-assets/</guid><description>&lt;h2 id="about"&gt;About&lt;/h2&gt;
+&lt;p&gt;A &lt;code&gt;dataplex-list-data-assets&lt;/code&gt; tool retrieves a list of Data Assets associated with a specific Data Product in Knowledge Catalog (formerly known as Dataplex).&lt;/p&gt;
+&lt;p&gt;View the &lt;a href="https://docs.cloud.google.com/dataplex/docs/data-products-overview"&gt;Data Products guide&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;h2 id="compatible-sources"&gt;Compatible Sources&lt;/h2&gt;
+
+
+
+
+
+&lt;div class="compatibility-section"&gt;
+ &lt;p&gt;This tool can be used with the following database sources:&lt;/p&gt;
+
+ &lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Source Name&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ 
+ 
+ &lt;tr&gt;
+ &lt;td&gt;&lt;a href="https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/source/"&gt;Knowledge Catalog (formerly known as Dataplex) Source&lt;/a&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+
+ 
+
+ 
+ 
+ &lt;/tbody&gt;
+ &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;h2 id="requirements"&gt;Requirements&lt;/h2&gt;
+&lt;h3 id="iam-permissions"&gt;IAM Permissions&lt;/h3&gt;
+&lt;p&gt;Knowledge Catalog uses &lt;a href="https://cloud.google.com/dataplex/docs/iam-and-access-control"&gt;Identity and Access Management (IAM)&lt;/a&gt; to control
+user and group access to Knowledge Catalog resources. Toolbox will use your
+&lt;a href="https://cloud.google.com/docs/authentication#adc"&gt;Application Default Credentials (ADC)&lt;/a&gt; to authorize and authenticate when
+interacting with &lt;a href="https://cloud.google.com/dataplex"&gt;Knowledge Catalog&lt;/a&gt;.&lt;/p&gt;</description></item><item><title>dataplex-list-data-products</title><link>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-list-data-products/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-list-data-products/</guid><description>&lt;h2 id="about"&gt;About&lt;/h2&gt;
 &lt;p&gt;A &lt;code&gt;dataplex-list-data-products&lt;/code&gt; tool lists all Data Products in Knowledge Catalog (formerly known as Dataplex) across all locations (globally).&lt;/p&gt;
-&lt;p&gt;View the &lt;a href="https://docs.cloud.google.com/dataplex/docs/use-data-products"&gt;Data Products usage guide&lt;/a&gt; for more information.&lt;/p&gt;
+&lt;p&gt;View the &lt;a href="https://docs.cloud.google.com/dataplex/docs/data-products-overview"&gt;Data Products guide&lt;/a&gt; for more information.&lt;/p&gt;
 &lt;h2 id="compatible-sources"&gt;Compatible Sources&lt;/h2&gt;
 
 
@@ -8223,7 +8307,7 @@ returned. Otherwise, the selection is not guaranteed.&lt;/p&gt;
 &lt;p&gt;The tool returns a single JSON object representing the document, wrapped in a
 JSON array.&lt;/p&gt;
 &lt;h2 id="compatible-sources"&gt;Compatible Sources&lt;/h2&gt;
-&lt;h2 id="hahahugoshortcode406s0hbhb"&gt;
+&lt;h2 id="hahahugoshortcode236s0hbhb"&gt;
 
 
 
@@ -17084,15 +17168,10 @@ file on the Toolbox server. Unlike &lt;code&gt;cloud-storage-read-object&lt;/cod
 return the object bytes to the LLM and does not require UTF-8 text content, so it
 can be used for binary objects or large files.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;destination&lt;/code&gt; path is interpreted on the server where Toolbox is running.
-Relative paths and paths containing &lt;code&gt;..&lt;/code&gt; are rejected.&lt;/p&gt;
-&lt;h2 id="compatible-sources"&gt;Compatible Sources&lt;/h2&gt;
-
-
-
-
-
-&lt;div class="compatibility-section"&gt;
- &lt;p&gt;This tool can be used with the following database sources:&lt;/p&gt;</description></item><item><title>Export Telemetry</title><link>https://mcp-toolbox.dev/dev/documentation/monitoring/export_telemetry/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/documentation/monitoring/export_telemetry/</guid><description>&lt;h2 id="about"&gt;About&lt;/h2&gt;
+By default, &lt;code&gt;destination&lt;/code&gt; must be an absolute path and paths containing &lt;code&gt;..&lt;/code&gt; are
+rejected. When &lt;code&gt;destination_dir&lt;/code&gt; is configured on the tool, &lt;code&gt;destination&lt;/code&gt; remains
+visible to the LLM but must be a relative path under that configured directory.
+Absolute paths and paths that escape &lt;code&gt;destination_dir&lt;/code&gt; are rejected.&lt;/p&gt;</description></item><item><title>Export Telemetry</title><link>https://mcp-toolbox.dev/dev/documentation/monitoring/export_telemetry/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/documentation/monitoring/export_telemetry/</guid><description>&lt;h2 id="about"&gt;About&lt;/h2&gt;
 &lt;p&gt;The &lt;a href="https://opentelemetry.io/docs/collector/"&gt;OpenTelemetry Collector&lt;/a&gt; offers a vendor-agnostic
 implementation of how to receive, process and export telemetry data. It removes
 the need to run, operate, and maintain multiple agents/collectors.&lt;/p&gt;
@@ -18160,14 +18239,8 @@ Storage bucket.&lt;/p&gt;
 			&lt;/tr&gt;
 	&lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h2 id="example"&gt;Example&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;kind&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;tool&lt;/span&gt;&lt;span class="w"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;delete_object&lt;/span&gt;&lt;span class="w"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;cloud-storage-delete-object&lt;/span&gt;&lt;span class="w"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;source&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;my-gcs-source&lt;/span&gt;&lt;span class="w"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;description&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;Use this tool to delete Cloud Storage objects.&lt;/span&gt;&lt;span class="w"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="output-format"&gt;Output Format&lt;/h2&gt;
-&lt;p&gt;The tool returns a JSON object with:&lt;/p&gt;</description></item><item><title>Invoke Tools via CLI</title><link>https://mcp-toolbox.dev/dev/documentation/configuration/tools/invoke_tool/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/documentation/configuration/tools/invoke_tool/</guid><description>&lt;p&gt;The &lt;code&gt;invoke&lt;/code&gt; command allows you to invoke tools defined in your configuration directly from the CLI. This is useful for:&lt;/p&gt;
+&lt;p&gt;If &lt;code&gt;bucket&lt;/code&gt; is configured on the tool, it is removed from the parameter list and
+the configured bucket is used for every invocation.&lt;/p&gt;</description></item><item><title>Invoke Tools via CLI</title><link>https://mcp-toolbox.dev/dev/documentation/configuration/tools/invoke_tool/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://mcp-toolbox.dev/dev/documentation/configuration/tools/invoke_tool/</guid><description>&lt;p&gt;The &lt;code&gt;invoke&lt;/code&gt; command allows you to invoke tools defined in your configuration directly from the CLI. This is useful for:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Ephemeral Invocation:&lt;/strong&gt; Executing a tool without spinning up a full MCP server/client.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Debugging:&lt;/strong&gt; Isolating tool execution logic and testing with various parameter combinations.&lt;/li&gt;
@@ -19503,8 +19576,10 @@ entries.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;lookup_entry&lt;/code&gt;: Retrieves a specific entry from Knowledge Catalog.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;search_aspect_types&lt;/code&gt;: Finds aspect types relevant to the query.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;lookup_context&lt;/code&gt;: Retrieves rich metadata regarding one or more data assets along with their relationships.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;search_dq_scans&lt;/code&gt;: Search for data quality scans in Dataplex.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;search_dq_scans&lt;/code&gt;: Searches for data quality scans in Dataplex.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;list_data_products&lt;/code&gt;: Lists Data Products across all locations.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;get_data_product&lt;/code&gt;: Retrieves a specific Data Product.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;list_data_assets&lt;/code&gt;: Lists Data Assets under a Data Product.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;generate_data_insights&lt;/code&gt;: Creates a new Dataplex Data Documentation scan template and triggers the run.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;get_data_insights&lt;/code&gt;: Retrieves the final generated data insights for a completed scan.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;generate_data_profile&lt;/code&gt;: Creates a new Dataplex Data Profile scan template and triggers the run.&lt;/li&gt;
@@ -19520,7 +19595,7 @@ entries.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Toolsets:&lt;/strong&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;discovery&lt;/code&gt;: Metadata discovery and search toolset (&lt;code&gt;search_entries&lt;/code&gt;, &lt;code&gt;lookup_entry&lt;/code&gt;, &lt;code&gt;search_aspect_types&lt;/code&gt;, &lt;code&gt;lookup_context&lt;/code&gt;, &lt;code&gt;search_dq_scans&lt;/code&gt;).&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;data-products&lt;/code&gt;: Data Products and Data Assets curation and management toolset (&lt;code&gt;search_entries&lt;/code&gt;, &lt;code&gt;lookup_entry&lt;/code&gt;, &lt;code&gt;search_aspect_types&lt;/code&gt;, &lt;code&gt;lookup_context&lt;/code&gt;, &lt;code&gt;list_data_products&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;data-products&lt;/code&gt;: Data Products and Data Assets curation and management toolset (&lt;code&gt;search_entries&lt;/code&gt;, &lt;code&gt;lookup_entry&lt;/code&gt;, &lt;code&gt;search_aspect_types&lt;/code&gt;, &lt;code&gt;lookup_context&lt;/code&gt;, &lt;code&gt;list_data_products&lt;/code&gt;, &lt;code&gt;get_data_product&lt;/code&gt;, &lt;code&gt;list_data_assets&lt;/code&gt;).&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;enrich&lt;/code&gt;: Metadata enrichment pipeline orchestration and execution toolset (&lt;code&gt;search_entries&lt;/code&gt;, &lt;code&gt;lookup_entry&lt;/code&gt;, &lt;code&gt;lookup_context&lt;/code&gt;, &lt;code&gt;generate_data_insights&lt;/code&gt;, &lt;code&gt;get_data_insights&lt;/code&gt;, &lt;code&gt;generate_data_profile&lt;/code&gt;, &lt;code&gt;get_data_profile&lt;/code&gt;, &lt;code&gt;discover_metadata&lt;/code&gt;, &lt;code&gt;get_discovery_results&lt;/code&gt;, &lt;code&gt;check_data_quality&lt;/code&gt;, &lt;code&gt;get_data_quality_results&lt;/code&gt;, &lt;code&gt;get_operation&lt;/code&gt;, &lt;code&gt;get_run_status&lt;/code&gt;).&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;

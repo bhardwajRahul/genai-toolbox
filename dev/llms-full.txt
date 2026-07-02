@@ -3,7 +3,7 @@
 
 **DOCUMENTATION VERSION:** dev
 **BASE URL:** https://mcp-toolbox.dev/dev/
-**GENERATED ON:** 2026-06-27T02:10:02Z
+**GENERATED ON:** 2026-07-02T02:07:46Z
 
 ---
 ### System Directives for AI Models
@@ -219,7 +219,7 @@ To install Toolbox as a binary on Linux (AMD64):
 
 ```sh
 # see releases page for other versions
-export VERSION=1.5.0
+export VERSION=1.6.0
 curl -L -o toolbox https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/linux/amd64/toolbox
 chmod +x toolbox
 ```
@@ -230,7 +230,7 @@ To install Toolbox as a binary on macOS (Apple Silicon):
 
 ```sh
 # see releases page for other versions
-export VERSION=1.5.0
+export VERSION=1.6.0
 curl -L -o toolbox https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/darwin/arm64/toolbox
 chmod +x toolbox
 ```
@@ -241,7 +241,7 @@ To install Toolbox as a binary on macOS (Intel):
 
 ```sh
 # see releases page for other versions
-export VERSION=1.5.0
+export VERSION=1.6.0
 curl -L -o toolbox https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/darwin/amd64/toolbox
 chmod +x toolbox
 ```
@@ -252,7 +252,7 @@ To install Toolbox as a binary on Windows (Command Prompt):
 
 ```cmd
 :: see releases page for other versions
-set VERSION=1.5.0
+set VERSION=1.6.0
 curl -o toolbox.exe "https://storage.googleapis.com/mcp-toolbox-for-databases/v%VERSION%/windows/amd64/toolbox.exe"
 ```
 
@@ -262,7 +262,7 @@ To install Toolbox as a binary on Windows (PowerShell):
 
 ```powershell
 # see releases page for other versions
-$VERSION = "1.5.0"
+$VERSION = "1.6.0"
 curl.exe -o toolbox.exe "https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/windows/amd64/toolbox.exe"
 ```
 
@@ -272,7 +272,7 @@ To install Toolbox as a binary on Windows ARM64 (Command Prompt):
 
 ```cmd
 :: see releases page for other versions
-set VERSION=1.5.0
+set VERSION=1.6.0
 curl -o toolbox.exe "https://storage.googleapis.com/mcp-toolbox-for-databases/v%VERSION%/windows/arm64/toolbox.exe"
 ```
 
@@ -282,7 +282,7 @@ To install Toolbox as a binary on Windows ARM64 (PowerShell):
 
 ```powershell
 # see releases page for other versions
-$VERSION = "1.5.0"
+$VERSION = "1.6.0"
 curl.exe -o toolbox.exe "https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/windows/arm64/toolbox.exe"
 ```
 
@@ -294,7 +294,7 @@ You can also install Toolbox as a container:
 
 ```sh
 # see releases page for other versions
-export VERSION=1.5.0
+export VERSION=1.6.0
 docker pull us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION
 ```
 
@@ -313,7 +313,7 @@ To install from source, ensure you have the latest version of
 [Go installed](https://go.dev/doc/install), and then run the following command:
 
 ```sh
-go install github.com/googleapis/mcp-toolbox@v1.5.0
+go install github.com/googleapis/mcp-toolbox@v1.6.0
 ```
 
 {{% /tab %}}
@@ -872,6 +872,49 @@ For more detailed instructions on using the Toolbox Go SDK, see the
 
 For more details, see the [Agent Skills guide](https://mcp-toolbox.dev/documentation/configuration/skills/).
 
+## Supported MCP Version
+
+Toolbox is fully compatible with the Model Context Protocol (MCP) and maintains support for multiple protocol revisions to ensure seamless integration with most MCP clients.
+
+### Stable Releases
+The following official MCP specification versions are currently supported for production use:
+
+* `2025-11-25`
+* `2025-06-18`
+* `2025-03-26`
+* `2024-11-05`
+
+{{< notice note >}}
+If no protocol version is negotiated or provided, the Toolbox server defaults to
+the legacy custom transport protocol established on `2024-11-05`, which does not
+require initialization.
+{{< /notice >}}
+
+### Draft Specifications
+We actively develop against upcoming protocol specifications. You can opt-in to
+test these forthcoming revisions before their official release using the
+`--enable-draft-specs` flag during server startup.
+
+To test these draft specifications, enable the startup flag and use this version
+string during negotiation:
+* `DRAFT-2026-v1`
+
+Description: Enables experimental support for upcoming draft MCP specifications,
+allowing you to test new schema standards and transport adjustments before they
+become stable.
+
+{{< notice note >}}
+Once the draft specification is finalized and released as a stable version, the
+draft implementation will be permanently removed. The flag itself will not be
+removed, but its functionality will remain dormant (having no effect on the
+server) until a new draft specification becomes available.
+
+There will be no automatic redirects or backwards compatibility from the draft
+spec to the stable release. Developers must manually migrate their clients to
+the stable version once it is available. Do not use this flag in production
+environments.
+{{< /notice >}}
+
 
 
 
@@ -1063,7 +1106,7 @@ In this section, we will download Toolbox, configure our tools in a
     <!-- {x-release-please-start-version} -->
     ```bash
     export OS="linux/amd64" # one of linux/amd64, darwin/arm64, darwin/amd64, windows/amd64, or windows/arm64
-    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/$OS/toolbox
+    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/$OS/toolbox
     ```
     <!-- {x-release-please-end} -->
 
@@ -9843,23 +9886,23 @@ After you install Looker in the MCP Store, resources and tools from the server a
 
 {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -10349,23 +10392,23 @@ expose your developer assistant tools to a MySQL instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -10679,23 +10722,23 @@ expose your developer assistant tools to a Neo4j instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -11006,23 +11049,23 @@ to expose your developer assistant tools to an Oracle instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -11355,23 +11398,23 @@ Omni](https://cloud.google.com/alloydb/omni/docs/overview).
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -11712,23 +11755,23 @@ instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -12042,23 +12085,23 @@ to expose your developer assistant tools to a SQLite instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -23412,7 +23455,10 @@ return the object bytes to the LLM and does not require UTF-8 text content, so i
 can be used for binary objects or large files.
 
 The `destination` path is interpreted on the server where Toolbox is running.
-Relative paths and paths containing `..` are rejected.
+By default, `destination` must be an absolute path and paths containing `..` are
+rejected. When `destination_dir` is configured on the tool, `destination` remains
+visible to the LLM but must be a relative path under that configured directory.
+Absolute paths and paths that escape `destination_dir` are rejected.
 
 [gcs-objects]: https://cloud.google.com/storage/docs/objects
 
@@ -23436,6 +23482,11 @@ destination already exists.
 | destination   |  string  |     true     | Absolute local filesystem path where the object will be written. Relative paths and paths containing `..` are rejected. |
 | overwrite     | boolean  |    false     | If true, overwrite the destination when it already exists. If false (default), return an error when it exists.     |
 
+If `bucket` is configured on the tool, it is removed from the parameter list. If
+`destination_dir` is configured on the tool, `destination` stays in the parameter
+list but changes to a relative path under `destination_dir`. If `overwrite` is
+configured on the tool, it is removed from the parameter list.
+
 ## Example
 
 ```yaml
@@ -23444,6 +23495,17 @@ name: download_object
 type: cloud-storage-download-object
 source: my-gcs-source
 description: Use this tool to download a Cloud Storage object to the server filesystem.
+```
+
+```yaml
+kind: tool
+name: download_reports
+type: cloud-storage-download-object
+source: my-gcs-source
+description: Use this tool to download report objects into the reports directory.
+bucket: analytics-exports
+destination_dir: /var/toolbox/downloads/reports
+overwrite: false
 ```
 
 ## Output Format
@@ -23463,6 +23525,9 @@ The tool returns a JSON object with:
 | type        |  string  |     true     | Must be "cloud-storage-download-object".                  |
 | source      |  string  |     true     | Name of the Cloud Storage source to download objects from. |
 | description |  string  |     true     | Description of the tool that is passed to the LLM.        |
+| bucket      |  string  |    false     | Cloud Storage bucket to use for every invocation. When set, `bucket` is hidden from the tool parameters. |
+| destination_dir | string | false | Absolute local directory to contain downloaded files. When set, `destination` is a relative path under this directory. |
+| overwrite   | boolean  |    false     | Whether to overwrite existing destination files for every invocation. When set, `overwrite` is hidden from the tool parameters. |
 
 
 
@@ -23508,6 +23573,9 @@ file.
 | source        |  string  |     true     | Absolute local filesystem path of the file to upload. Relative paths and paths containing `..` are rejected.       |
 | content_type  |  string  |    false     | MIME type to record on the uploaded object. When empty, it is inferred from the source file extension when possible. |
 
+If `bucket` is configured on the tool, it is removed from the parameter list and
+the configured bucket is used for every invocation.
+
 ## Example
 
 ```yaml
@@ -23516,6 +23584,15 @@ name: upload_object
 type: cloud-storage-upload-object
 source: my-gcs-source
 description: Use this tool to upload a local file to Cloud Storage.
+```
+
+```yaml
+kind: tool
+name: upload_reports
+type: cloud-storage-upload-object
+source: my-gcs-source
+description: Use this tool to upload local report files to Cloud Storage.
+bucket: analytics-exports
 ```
 
 ## Output Format
@@ -23536,6 +23613,7 @@ The tool returns a JSON object with:
 | type        |  string  |     true     | Must be "cloud-storage-upload-object".                 |
 | source      |  string  |     true     | Name of the Cloud Storage source to upload objects to. |
 | description |  string  |     true     | Description of the tool that is passed to the LLM.     |
+| bucket      |  string  |    false     | Cloud Storage bucket to use for every invocation. When set, `bucket` is hidden from the tool parameters. |
 
 
 
@@ -23576,6 +23654,9 @@ object.
 | content       |  string  |     true     | Text content to write to the Cloud Storage object.                                                    |
 | content_type  |  string  |    false     | MIME type to record on the written object. When empty, Cloud Storage auto-detects from the content.   |
 
+If `bucket` is configured on the tool, it is removed from the parameter list and
+the configured bucket is used for every invocation.
+
 ## Example
 
 ```yaml
@@ -23584,6 +23665,15 @@ name: write_object
 type: cloud-storage-write-object
 source: my-gcs-source
 description: Use this tool to write text content to Cloud Storage.
+```
+
+```yaml
+kind: tool
+name: write_reports
+type: cloud-storage-write-object
+source: my-gcs-source
+description: Use this tool to write generated reports to Cloud Storage.
+bucket: analytics-exports
 ```
 
 ## Output Format
@@ -23604,6 +23694,7 @@ The tool returns a JSON object with:
 | type        |  string  |     true     | Must be "cloud-storage-write-object".                |
 | source      |  string  |     true     | Name of the Cloud Storage source to write objects to. |
 | description |  string  |     true     | Description of the tool that is passed to the LLM.   |
+| bucket      |  string  |    false     | Cloud Storage bucket to use for every invocation. When set, `bucket` is hidden from the tool parameters. |
 
 
 
@@ -23643,6 +23734,10 @@ or update the destination object.
 | destination_bucket |  string  |     true     | Name of the Cloud Storage bucket to copy into.                                      |
 | destination_object |  string  |     true     | Full destination object name (path) within the destination bucket.                  |
 
+If `source_bucket` or `destination_bucket` is configured on the tool, that field
+is removed from the parameter list and the configured value is used for every
+invocation.
+
 ## Example
 
 ```yaml
@@ -23651,6 +23746,16 @@ name: copy_object
 type: cloud-storage-copy-object
 source: my-gcs-source
 description: Use this tool to copy Cloud Storage objects.
+```
+
+```yaml
+kind: tool
+name: copy_reports
+type: cloud-storage-copy-object
+source: my-gcs-source
+description: Use this tool to copy reports into the archive bucket.
+source_bucket: analytics-exports
+destination_bucket: analytics-archive
 ```
 
 ## Output Format
@@ -23673,6 +23778,8 @@ The tool returns a JSON object with:
 | type        |  string  |     true     | Must be "cloud-storage-copy-object".                 |
 | source      |  string  |     true     | Name of the Cloud Storage source to copy objects in. |
 | description |  string  |     true     | Description of the tool that is passed to the LLM.   |
+| source_bucket | string | false | Source Cloud Storage bucket to use for every invocation. When set, `source_bucket` is hidden from the tool parameters. |
+| destination_bucket | string | false | Destination Cloud Storage bucket to use for every invocation. When set, `destination_bucket` is hidden from the tool parameters. |
 
 
 
@@ -23713,6 +23820,9 @@ already exists, `storage.objects.delete` is also required.
 | source_object      |  string  |     true     | Full source object name (path) within the bucket, e.g. `path/to/file.txt`.       |
 | destination_object |  string  |     true     | Full destination object name (path) within the same bucket.                      |
 
+If `bucket` is configured on the tool, it is removed from the parameter list and
+the configured bucket is used for every invocation.
+
 ## Example
 
 ```yaml
@@ -23721,6 +23831,15 @@ name: move_object
 type: cloud-storage-move-object
 source: my-gcs-source
 description: Use this tool to move or rename an object within a Cloud Storage bucket.
+```
+
+```yaml
+kind: tool
+name: move_reports
+type: cloud-storage-move-object
+source: my-gcs-source
+description: Use this tool to move report objects within the reports bucket.
+bucket: analytics-exports
 ```
 
 ## Output Format
@@ -23742,6 +23861,7 @@ The tool returns a JSON object with:
 | type        |  string  |     true     | Must be "cloud-storage-move-object".                 |
 | source      |  string  |     true     | Name of the Cloud Storage source to move objects in. |
 | description |  string  |     true     | Description of the tool that is passed to the LLM.   |
+| bucket      |  string  |    false     | Cloud Storage bucket to use for every invocation. When set, `bucket` is hidden from the tool parameters. |
 
 
 
@@ -23775,6 +23895,9 @@ The Cloud Storage credentials must be able to delete the target object.
 | bucket        |  string  |     true     | Name of the Cloud Storage bucket containing the object to delete.    |
 | object        |  string  |     true     | Full object name (path) within the bucket, e.g. `path/to/file.txt`.  |
 
+If `bucket` is configured on the tool, it is removed from the parameter list and
+the configured bucket is used for every invocation.
+
 ## Example
 
 ```yaml
@@ -23783,6 +23906,15 @@ name: delete_object
 type: cloud-storage-delete-object
 source: my-gcs-source
 description: Use this tool to delete Cloud Storage objects.
+```
+
+```yaml
+kind: tool
+name: delete_reports
+type: cloud-storage-delete-object
+source: my-gcs-source
+description: Use this tool to delete report objects from Cloud Storage.
+bucket: analytics-exports
 ```
 
 ## Output Format
@@ -23802,6 +23934,7 @@ The tool returns a JSON object with:
 | type        |  string  |     true     | Must be "cloud-storage-delete-object".                 |
 | source      |  string  |     true     | Name of the Cloud Storage source to delete objects in. |
 | description |  string  |     true     | Description of the tool that is passed to the LLM.     |
+| bucket      |  string  |    false     | Cloud Storage bucket to use for every invocation. When set, `bucket` is hidden from the tool parameters. |
 
 
 
@@ -30034,6 +30167,21 @@ This abbreviated syntax works for the qualified predicates except for `label` in
 2. You can optionally filter by `display_name` (e.g., "`display_name:\"my-product\"`") or other fields using the Dataplex filter syntax.
 ### Response
 1. Unless asked for a specific data product, respond with all entries returned.
+
+## Tool: get_data_product
+### Request
+1. Use this tool to retrieve detailed metadata for a specific Data Product.
+2. You must provide `locationId` and `dataProductId`.
+### Response
+1. Present the retrieved metadata for the Data Product, including its display name, description, owner emails, asset count, labels, and access groups.
+
+## Tool: list_data_assets
+### Request
+1. Use this tool to retrieve all Data Assets under a specific Data Product.
+2. You must provide `locationId` and `dataProductId`.
+3. You can optionally filter the listed assets using `filter` or limit the response using `pageSize`.
+### Response
+1. Present the retrieved list of Data Assets, including their names, resources, and labels.
 ```
 
 
@@ -30417,6 +30565,79 @@ description: Retrieve results from a completed data insights scan.
 
 
 ========================================================================
+## dataplex-get-data-product
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-get-data-product
+**URL:** https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-get-data-product/
+**Description:** A "dataplex-get-data-product" tool allows to retrieve a specific Data Product.
+
+
+
+## About
+
+A `dataplex-get-data-product` tool retrieves detailed metadata for a specific Data Product in Knowledge Catalog (formerly known as Dataplex).
+
+View the [Data Products guide][guide] for more information.
+
+[guide]: https://docs.cloud.google.com/dataplex/docs/data-products-overview
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Requirements
+
+### IAM Permissions
+
+Knowledge Catalog uses [Identity and Access Management (IAM)][iam-overview] to control
+user and group access to Knowledge Catalog resources. Toolbox will use your
+[Application Default Credentials (ADC)][adc] to authorize and authenticate when
+interacting with [Knowledge Catalog][dataplex-docs].
+
+In addition to [setting the ADC for your server][set-adc], you need to ensure
+the IAM identity has been given the correct IAM permissions for the tasks you
+intend to perform. See [Knowledge Catalog IAM permissions][iam-permissions]
+and [Knowledge Catalog IAM roles][iam-roles] for more information on
+applying IAM permissions and roles to an identity.
+
+[iam-overview]: https://cloud.google.com/dataplex/docs/iam-and-access-control
+[adc]: https://cloud.google.com/docs/authentication#adc
+[set-adc]: https://cloud.google.com/docs/authentication/provide-credentials-adc
+[iam-permissions]: https://cloud.google.com/dataplex/docs/iam-permissions
+[iam-roles]: https://cloud.google.com/dataplex/docs/iam-roles
+[dataplex-docs]: https://cloud.google.com/dataplex
+
+## Parameters
+
+The `dataplex-get-data-product` tool has the following parameters:
+
+| **field**     | **type** | **required** | **description**                                                 |
+| ------------- | -------- | ------------ | --------------------------------------------------------------- |
+| locationId    | string   | true         | The location ID (e.g. `us`, `us-central1`) of the Data Product. |
+| dataProductId | string   | true         | The unique ID of the Data Product.                              |
+
+## Example
+
+```yaml
+kind: tool
+name: get_data_product
+type: dataplex-get-data-product
+source: my-dataplex-source
+description: Use this tool to retrieve a Data Product.
+```
+
+## Reference
+
+| **field**   | **type** | **required** | **description**                                    |
+| ----------- | -------- | ------------ | -------------------------------------------------- |
+| type        | string   | true         | Must be "dataplex-get-data-product".               |
+| source      | string   | true         | Name of the source the tool should execute on.     |
+| description | string   | true         | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
 ## dataplex-get-data-profile
 ========================================================================
 **Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-get-data-profile
@@ -30777,6 +30998,82 @@ description: Monitor the background execution run of a Dataplex scan.
 
 
 ========================================================================
+## dataplex-list-data-assets
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-list-data-assets
+**URL:** https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-list-data-assets/
+**Description:** A "dataplex-list-data-assets" tool allows to list Data Assets under a Data Product.
+
+
+
+## About
+
+A `dataplex-list-data-assets` tool retrieves a list of Data Assets associated with a specific Data Product in Knowledge Catalog (formerly known as Dataplex).
+
+View the [Data Products guide][guide] for more information.
+
+[guide]: https://docs.cloud.google.com/dataplex/docs/data-products-overview
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Requirements
+
+### IAM Permissions
+
+Knowledge Catalog uses [Identity and Access Management (IAM)][iam-overview] to control
+user and group access to Knowledge Catalog resources. Toolbox will use your
+[Application Default Credentials (ADC)][adc] to authorize and authenticate when
+interacting with [Knowledge Catalog][dataplex-docs].
+
+In addition to [setting the ADC for your server][set-adc], you need to ensure
+the IAM identity has been given the correct IAM permissions for the tasks you
+intend to perform. See [Knowledge Catalog IAM permissions][iam-permissions]
+and [Knowledge Catalog IAM roles][iam-roles] for more information on
+applying IAM permissions and roles to an identity.
+
+[iam-overview]: https://cloud.google.com/dataplex/docs/iam-and-access-control
+[adc]: https://cloud.google.com/docs/authentication#adc
+[set-adc]: https://cloud.google.com/docs/authentication/provide-credentials-adc
+[iam-permissions]: https://cloud.google.com/dataplex/docs/iam-permissions
+[iam-roles]: https://cloud.google.com/dataplex/docs/iam-roles
+[dataplex-docs]: https://cloud.google.com/dataplex
+
+## Parameters
+
+The `dataplex-list-data-assets` tool has the following parameters:
+
+| **field**     | **type** | **required** | **description**                                                 |
+| ------------- | -------- | ------------ | --------------------------------------------------------------- |
+| locationId    | string   | true         | The location ID (e.g. `us`, `us-central1`) of the Data Product. |
+| dataProductId | string   | true         | The unique ID of the parent Data Product.                       |
+| filter        | string   | false        | Filter string to list data assets.                              |
+| pageSize      | integer  | false        | Number of returned data assets in the page.                     |
+| orderBy       | string   | false        | Specifies the ordering of results.                              |
+
+## Example
+
+```yaml
+kind: tool
+name: list_data_assets
+type: dataplex-list-data-assets
+source: my-dataplex-source
+description: Use this tool to list Data Assets under a Data Product.
+```
+
+## Reference
+
+| **field**   | **type** | **required** | **description**                                    |
+| ----------- | -------- | ------------ | -------------------------------------------------- |
+| type        | string   | true         | Must be "dataplex-list-data-assets".               |
+| source      | string   | true         | Name of the source the tool should execute on.     |
+| description | string   | true         | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
 ## dataplex-list-data-products
 ========================================================================
 **Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-list-data-products
@@ -30789,9 +31086,9 @@ description: Monitor the background execution run of a Dataplex scan.
 
 A `dataplex-list-data-products` tool lists all Data Products in Knowledge Catalog (formerly known as Dataplex) across all locations (globally).
 
-View the [Data Products usage guide][usage-guide] for more information.
+View the [Data Products guide][guide] for more information.
 
-[usage-guide]: https://docs.cloud.google.com/dataplex/docs/use-data-products
+[guide]: https://docs.cloud.google.com/dataplex/docs/data-products-overview
 
 ## Compatible Sources
 
@@ -30825,7 +31122,7 @@ The `dataplex-list-data-products` tool has the following optional parameters:
 
 | **field** | **type** | **required** | **description**                                                                                                                                                                                                                                                |
 | --------- | -------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| filter    | string   | false        | Filter string to list data products. Based on the AIP-160 proposal. Use '=' for exact, and ':' for contains matching. String literals must be enclosed within "". Matching accross all fields at once is not yet supported. E.g. "display_name:\"my-product\"" |
+| filter    | string   | false        | Filter string to list data products. Based on the AIP-160 proposal. Use '=' for exact, and ':' for contains matching. String literals must be enclosed within "". Matching across all fields at once is not yet supported. E.g. "display_name:\"my-product\"" |
 | pageSize  | integer  | false        | Number of returned data products in the page. Defaults to `10`.                                                                                                                                                                                                |
 | orderBy   | string   | false        | Specifies the ordering of results.                                                                                                                                                                                                                             |
 
@@ -31243,8 +31540,10 @@ description: Use this tool to get all the entries based on the provided query.
     *   `lookup_entry`: Retrieves a specific entry from Knowledge Catalog.
     *   `search_aspect_types`: Finds aspect types relevant to the query.
     *   `lookup_context`: Retrieves rich metadata regarding one or more data assets along with their relationships.
-    *   `search_dq_scans`: Search for data quality scans in Dataplex.
+    *   `search_dq_scans`: Searches for data quality scans in Dataplex.
     *   `list_data_products`: Lists Data Products across all locations.
+    *   `get_data_product`: Retrieves a specific Data Product.
+    *   `list_data_assets`: Lists Data Assets under a Data Product.
     *   `generate_data_insights`: Creates a new Dataplex Data Documentation scan template and triggers the run.
     *   `get_data_insights`: Retrieves the final generated data insights for a completed scan.
     *   `generate_data_profile`: Creates a new Dataplex Data Profile scan template and triggers the run.
@@ -31257,9 +31556,8 @@ description: Use this tool to get all the entries based on the provided query.
     *   `get_run_status`: Retrieves the execution status of the latest background job run.
 *   **Toolsets:**
     *   `discovery`: Metadata discovery and search toolset (`search_entries`, `lookup_entry`, `search_aspect_types`, `lookup_context`, `search_dq_scans`).
-    *   `data-products`: Data Products and Data Assets curation and management toolset (`search_entries`, `lookup_entry`, `search_aspect_types`, `lookup_context`, `list_data_products`).
+    *   `data-products`: Data Products and Data Assets curation and management toolset (`search_entries`, `lookup_entry`, `search_aspect_types`, `lookup_context`, `list_data_products`, `get_data_product`, `list_data_assets`).
     *   `enrich`: Metadata enrichment pipeline orchestration and execution toolset (`search_entries`, `lookup_entry`, `lookup_context`, `generate_data_insights`, `get_data_insights`, `generate_data_profile`, `get_data_profile`, `discover_metadata`, `get_discovery_results`, `check_data_quality`, `get_data_quality_results`, `get_operation`, `get_run_status`).
-
 
 
 
@@ -34929,7 +35227,7 @@ In this section, we will download Toolbox and run the Toolbox server.
     <!-- {x-release-please-start-version} -->
     ```bash
     export OS="linux/amd64" # one of linux/amd64, darwin/arm64, darwin/amd64, windows/amd64, or windows/arm64
-    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/$OS/toolbox
+    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/$OS/toolbox
     ```
     <!-- {x-release-please-end} -->
 
@@ -35090,7 +35388,7 @@ In this section, we will download Toolbox and run the Toolbox server.
     <!-- {x-release-please-start-version} -->
     ```bash
     export OS="linux/amd64" # one of linux/amd64, darwin/arm64, darwin/amd64, windows/amd64, or windows/arm64
-    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/$OS/toolbox
+    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/$OS/toolbox
     ```
     <!-- {x-release-please-end} -->
 
@@ -35213,7 +35511,7 @@ In this section, we will download Toolbox and run the Toolbox server.
     <!-- {x-release-please-start-version} -->
     ```bash
     export OS="linux/amd64" # one of linux/amd64, darwin/arm64, darwin/amd64, windows/amd64, or windows/arm64
-    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.5.0/$OS/toolbox
+    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.6.0/$OS/toolbox
     ```
     <!-- {x-release-please-end} -->
 
@@ -45881,7 +46179,7 @@ Configure the Gemini CLI to talk to your local Toolbox MCP server.
 |              | `--disable-reload`         | Disables dynamic reloading config.                                                                                                                                        |             |
 | `-h`         | `--help`                   | help for toolbox                                                                                                                                                          |             |
 |              | `--http-max-request-bytes` | Maximum MCP HTTP request body size in bytes.                                                                                                                              | `10485760`  |
-|              | `--ignore-unknown-tools`   | Log warnings and skip unknown/unsupported tool types instead of failing to start.                                                                                          |             |
+|              | `--ignore-unknown-tools`   | Log warnings and skip unknown/unsupported tool types instead of failing to start.                                                                                         |             |
 |              | `--log-level`              | Specify the minimum level logged. Allowed: 'DEBUG', 'INFO', 'WARN', 'ERROR'.                                                                                              | `info`      |
 |              | `--logging-format`         | Specify logging format to use. Allowed: 'standard' or 'JSON'.                                                                                                             | `standard`  |
 |              | `--mcp-prm-file`           | Path to a manual Protected Resource Metadata (PRM) JSON file. If provided, overrides auto-generation for MCP Server-Wide Authentication.                                  |             |
@@ -45903,6 +46201,7 @@ Configure the Gemini CLI to talk to your local Toolbox MCP server.
 |              | `--allowed-hosts`          | Specifies a list of hosts permitted to access this server to prevent DNS rebinding attacks.                                                                               | `*`         |
 |              | `--user-agent-metadata`    | Appends additional metadata to the User-Agent.                                                                                                                            |             |
 |              | `--poll-interval`          | Specifies the polling frequency (seconds) for configuration file updates.                                                                                                 | `0`         |
+|              | `--enable-draft-specs`     | Opt-in and test upcoming draft MCP specifications.                                                                                                                        | `false`     |
 | `-v`         | `--version`                | version for toolbox                                                                                                                                                       |             |
 
 ## Sub Commands
