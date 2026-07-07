@@ -372,9 +372,6 @@ func (s *Source) ListDataProducts(
 	pageSize int,
 	orderBy string,
 ) ([]*DataProductSummary, error) {
-	if s.GetDataProductClient() == nil {
-		return nil, fmt.Errorf("dataplex data product client is not initialized")
-	}
 	if pageSize <= 0 {
 		return nil, fmt.Errorf("pageSize must be positive: %d", pageSize)
 	}
@@ -437,9 +434,6 @@ type DataProduct struct {
 }
 
 func (s *Source) GetDataProduct(ctx context.Context, locationID string, dataProductID string) (*DataProduct, error) {
-	if s.GetDataProductClient() == nil {
-		return nil, fmt.Errorf("dataplex data product client is not initialized")
-	}
 	name := fmt.Sprintf("projects/%s/locations/%s/dataProducts/%s", s.ProjectID(), locationID, dataProductID)
 	req := &dataplexpb.GetDataProductRequest{
 		Name: name,
@@ -545,9 +539,6 @@ func (s *Source) ListDataAssets(
 }
 
 func (s *Source) GetDataAsset(ctx context.Context, locationId string, dataProductId string, dataAssetId string) (*DataAsset, error) {
-	if s.GetDataProductClient() == nil {
-		return nil, fmt.Errorf("dataplex data product client is not initialized")
-	}
 	name := fmt.Sprintf("projects/%s/locations/%s/dataProducts/%s/dataAssets/%s", s.ProjectID(), locationId, dataProductId, dataAssetId)
 	req := &dataplexpb.GetDataAssetRequest{
 		Name: name,
@@ -573,6 +564,62 @@ func (s *Source) GetDataAsset(ctx context.Context, locationId string, dataProduc
 		Labels:             resp.GetLabels(),
 		AccessGroupConfigs: resp.GetAccessGroupConfigs(),
 	}, nil
+}
+
+// CreateDataProduct creates a new Data Product.
+// dataProductId is optional. If empty, the Dataplex backend will automatically generate a unique ID.
+func (s *Source) CreateDataProduct(
+	ctx context.Context,
+	locationId string,
+	dataProductId string,
+	displayName string,
+	description string,
+	ownerEmails []string,
+	accessGroups []AccessGroup,
+) (string, string, error) {
+	parent := fmt.Sprintf("projects/%s/locations/%s", s.ProjectID(), locationId)
+
+	agMap := make(map[string]*dataplexpb.DataProduct_AccessGroup)
+	for _, ag := range accessGroups {
+		principal := &dataplexpb.DataProduct_Principal{}
+		if ag.GoogleGroup != "" {
+			principal.Type = &dataplexpb.DataProduct_Principal_GoogleGroup{
+				GoogleGroup: ag.GoogleGroup,
+			}
+		}
+		if ag.ServiceAccount != "" {
+			principal.ServiceAccount = &ag.ServiceAccount
+		}
+		agMap[ag.ID] = &dataplexpb.DataProduct_AccessGroup{
+			Id:          ag.ID,
+			DisplayName: ag.DisplayName,
+			Description: ag.Description,
+			Principal:   principal,
+		}
+	}
+
+	req := &dataplexpb.CreateDataProductRequest{
+		Parent:        parent,
+		DataProductId: dataProductId,
+		DataProduct: &dataplexpb.DataProduct{
+			DisplayName:  displayName,
+			Description:  description,
+			OwnerEmails:  ownerEmails,
+			AccessGroups: agMap,
+		},
+	}
+
+	op, err := s.GetDataProductClient().CreateDataProduct(ctx, req)
+	if err != nil {
+		return "", "", err
+	}
+
+	opName := op.Name()
+	parts := strings.Split(opName, "/")
+	if len(parts) < 6 || parts[0] != "projects" || parts[2] != "locations" || parts[4] != "operations" {
+		return "", "", fmt.Errorf("invalid operation name: %q", opName)
+	}
+	return parts[3], parts[5], nil
 }
 
 func (s *Source) GenerateDataInsights(ctx context.Context, location, resourcePath string, publish bool) (string, error) {
