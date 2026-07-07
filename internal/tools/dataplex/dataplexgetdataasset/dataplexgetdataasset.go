@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package dataplexlistdataassets
+package dataplexgetdataasset
 
 import (
 	"context"
@@ -26,7 +26,7 @@ import (
 	"github.com/googleapis/mcp-toolbox/internal/util/parameters"
 )
 
-const resourceType string = "dataplex-list-data-assets"
+const resourceType string = "dataplex-get-data-asset"
 
 func init() {
 	if !tools.Register(resourceType, newConfig) {
@@ -43,7 +43,7 @@ func newConfig(ctx context.Context, name string, decoder *yaml.Decoder) (tools.T
 }
 
 type compatibleSource interface {
-	ListDataAssets(ctx context.Context, locationId string, dataProductId string, filter string, pageSize int, orderBy string) ([]*dataplex.DataAsset, error)
+	GetDataAsset(ctx context.Context, locationId string, dataProductId string, dataAssetId string) (*dataplex.DataAsset, error)
 }
 
 type Config struct {
@@ -53,7 +53,6 @@ type Config struct {
 	Annotations      *tools.ToolAnnotations `yaml:"annotations,omitempty"`
 }
 
-// validate interface
 var _ tools.ToolConfig = Config{}
 
 func (cfg Config) ToolConfigType() string {
@@ -61,24 +60,10 @@ func (cfg Config) ToolConfigType() string {
 }
 
 func (cfg Config) Initialize(ctx context.Context) (tools.Tool, error) {
-	locationId := parameters.NewStringParameter("locationId", "Required. The location ID (e.g., 'us', 'us-central1') where the Data Product is located.")
-	dataProductId := parameters.NewStringParameter("dataProductId", "Required. The unique ID of the parent Data Product.")
-	filter := parameters.NewStringParameter(
-		"filter",
-		"Optional. Filter string to list data assets. Based on the AIP-160 proposal. Use '=' for exact, and ':' for contains matching. String literals must be enclosed within \"\". Matching across all fields at once is not yet supported.",
-		parameters.WithStringDefault(""),
-	)
-	pageSize := parameters.NewIntParameter(
-		"pageSize",
-		"Optional. Number of returned data assets in the page.",
-		parameters.WithIntDefault(10),
-	)
-	orderBy := parameters.NewStringParameter(
-		"orderBy",
-		"Optional. Specifies the ordering of results.",
-		parameters.WithStringDefault(""),
-	)
-	params := parameters.Parameters{locationId, dataProductId, filter, pageSize, orderBy}
+	locationId := parameters.NewStringParameter("locationId", "The location ID (e.g., 'us', 'us-central1') where the Data Product is located.")
+	dataProductId := parameters.NewStringParameter("dataProductId", "The unique ID of the parent Data Product.")
+	dataAssetId := parameters.NewStringParameter("dataAssetId", "The unique ID of the Data Asset.")
+	params := parameters.Parameters{locationId, dataProductId, dataAssetId}
 
 	t := Tool{
 		BaseTool: tools.NewBaseTool(
@@ -95,12 +80,11 @@ func (cfg Config) Initialize(ctx context.Context) (tools.Tool, error) {
 	return t, nil
 }
 
-// validate interface
-var _ tools.Tool = Tool{}
-
 type Tool struct {
 	tools.BaseTool[Config]
 }
+
+var _ tools.Tool = Tool{}
 
 func (t Tool) ToConfig() tools.ToolConfig {
 	return t.Cfg
@@ -121,20 +105,12 @@ func (t Tool) Invoke(ctx context.Context, resourceMgr tools.SourceProvider, para
 	if !ok {
 		return nil, util.NewAgentError(fmt.Sprintf("error casting 'dataProductId' parameter: %v", paramsMap["dataProductId"]), nil)
 	}
-	filter, ok := paramsMap["filter"].(string)
+	dataAssetId, ok := paramsMap["dataAssetId"].(string)
 	if !ok {
-		return nil, util.NewAgentError(fmt.Sprintf("error casting 'filter' parameter: %v", paramsMap["filter"]), nil)
-	}
-	pageSize, ok := paramsMap["pageSize"].(int)
-	if !ok {
-		return nil, util.NewAgentError(fmt.Sprintf("error casting 'pageSize' parameter: %v", paramsMap["pageSize"]), nil)
-	}
-	orderBy, ok := paramsMap["orderBy"].(string)
-	if !ok {
-		return nil, util.NewAgentError(fmt.Sprintf("error casting 'orderBy' parameter: %v", paramsMap["orderBy"]), nil)
+		return nil, util.NewAgentError(fmt.Sprintf("error casting 'dataAssetId' parameter: %v", paramsMap["dataAssetId"]), nil)
 	}
 
-	resp, err := source.ListDataAssets(ctx, locationId, dataProductId, filter, pageSize, orderBy)
+	resp, err := source.GetDataAsset(ctx, locationId, dataProductId, dataAssetId)
 	if err != nil {
 		return nil, util.ProcessGcpError(err)
 	}

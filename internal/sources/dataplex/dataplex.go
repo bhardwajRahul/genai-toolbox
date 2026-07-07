@@ -421,8 +421,8 @@ type AccessGroup struct {
 	ID             string `json:"id"`
 	DisplayName    string `json:"displayName"`
 	Description    string `json:"description"`
-	GoogleGroup    string `json:"googleGroup,omitempty"`
-	ServiceAccount string `json:"serviceAccount,omitempty"`
+	GoogleGroup    string `json:"googleGroup"`
+	ServiceAccount string `json:"serviceAccount"`
 }
 
 type DataProduct struct {
@@ -479,12 +479,15 @@ func (s *Source) GetDataProduct(ctx context.Context, locationID string, dataProd
 	}, nil
 }
 
-type DataAssetSummary struct {
-	LocationID    string            `json:"locationId"`
-	DataProductID string            `json:"dataProductId"`
-	DataAsset     string            `json:"dataAsset"`
-	ResourceUri   string            `json:"resourceUri"`
-	Labels        map[string]string `json:"labels"`
+// Common between ListDataAssets and GetDataAsset.
+// The only difference between the objects returned by these two methods is whether the AccessGroupConfigs field (marked omitempty) is included.
+type DataAsset struct {
+	LocationID         string                                             `json:"locationId"`
+	DataProductID      string                                             `json:"dataProductId"`
+	DataAssetID        string                                             `json:"dataAssetId"`
+	ResourceURI        string                                             `json:"resourceUri"`
+	Labels             map[string]string                                  `json:"labels"`
+	AccessGroupConfigs map[string]*dataplexpb.DataAsset_AccessGroupConfig `json:"accessGroupConfigs,omitempty"`
 }
 
 func (s *Source) ListDataAssets(
@@ -494,7 +497,7 @@ func (s *Source) ListDataAssets(
 	filter string,
 	pageSize int,
 	orderBy string,
-) ([]*DataAssetSummary, error) {
+) ([]*DataAsset, error) {
 	if s.GetDataProductClient() == nil {
 		return nil, fmt.Errorf("dataplex data product client is not initialized")
 	}
@@ -510,7 +513,7 @@ func (s *Source) ListDataAssets(
 	}
 
 	it := s.GetDataProductClient().ListDataAssets(ctx, req)
-	var results []*DataAssetSummary
+	var results []*DataAsset
 
 	for len(results) < pageSize {
 		asset, err := it.Next()
@@ -530,15 +533,46 @@ func (s *Source) ListDataAssets(
 			prodId = parts[5]
 			assetId = parts[7]
 		}
-		results = append(results, &DataAssetSummary{
+		results = append(results, &DataAsset{
 			LocationID:    locId,
 			DataProductID: prodId,
-			DataAsset:     assetId,
-			ResourceUri:   asset.GetResource(),
+			DataAssetID:   assetId,
+			ResourceURI:   asset.GetResource(),
 			Labels:        asset.GetLabels(),
 		})
 	}
 	return results, nil
+}
+
+func (s *Source) GetDataAsset(ctx context.Context, locationId string, dataProductId string, dataAssetId string) (*DataAsset, error) {
+	if s.GetDataProductClient() == nil {
+		return nil, fmt.Errorf("dataplex data product client is not initialized")
+	}
+	name := fmt.Sprintf("projects/%s/locations/%s/dataProducts/%s/dataAssets/%s", s.ProjectID(), locationId, dataProductId, dataAssetId)
+	req := &dataplexpb.GetDataAssetRequest{
+		Name: name,
+	}
+	resp, err := s.GetDataProductClient().GetDataAsset(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	parts := strings.Split(resp.GetName(), "/")
+	var locId, prodId, assetId string
+	if len(parts) >= 8 && parts[0] == "projects" && parts[2] == "locations" && parts[4] == "dataProducts" && parts[6] == "dataAssets" {
+		locId = parts[3]
+		prodId = parts[5]
+		assetId = parts[7]
+	}
+
+	return &DataAsset{
+		LocationID:         locId,
+		DataProductID:      prodId,
+		DataAssetID:        assetId,
+		ResourceURI:        resp.GetResource(),
+		Labels:             resp.GetLabels(),
+		AccessGroupConfigs: resp.GetAccessGroupConfigs(),
+	}, nil
 }
 
 func (s *Source) GenerateDataInsights(ctx context.Context, location, resourcePath string, publish bool) (string, error) {
