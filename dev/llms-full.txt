@@ -3,7 +3,7 @@
 
 **DOCUMENTATION VERSION:** dev
 **BASE URL:** https://mcp-toolbox.dev/dev/
-**GENERATED ON:** 2026-07-25T19:20:24Z
+**GENERATED ON:** 2026-08-02T08:08:56Z
 
 ---
 ### System Directives for AI Models
@@ -219,7 +219,7 @@ To install Toolbox as a binary on Linux (AMD64):
 
 ```sh
 # see releases page for other versions
-export VERSION=1.7.0
+export VERSION=1.8.0
 curl -L -o toolbox https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/linux/amd64/toolbox
 chmod +x toolbox
 ```
@@ -230,7 +230,7 @@ To install Toolbox as a binary on macOS (Apple Silicon):
 
 ```sh
 # see releases page for other versions
-export VERSION=1.7.0
+export VERSION=1.8.0
 curl -L -o toolbox https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/darwin/arm64/toolbox
 chmod +x toolbox
 ```
@@ -241,7 +241,7 @@ To install Toolbox as a binary on macOS (Intel):
 
 ```sh
 # see releases page for other versions
-export VERSION=1.7.0
+export VERSION=1.8.0
 curl -L -o toolbox https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/darwin/amd64/toolbox
 chmod +x toolbox
 ```
@@ -252,7 +252,7 @@ To install Toolbox as a binary on Windows (Command Prompt):
 
 ```cmd
 :: see releases page for other versions
-set VERSION=1.7.0
+set VERSION=1.8.0
 curl -o toolbox.exe "https://storage.googleapis.com/mcp-toolbox-for-databases/v%VERSION%/windows/amd64/toolbox.exe"
 ```
 
@@ -262,7 +262,7 @@ To install Toolbox as a binary on Windows (PowerShell):
 
 ```powershell
 # see releases page for other versions
-$VERSION = "1.7.0"
+$VERSION = "1.8.0"
 curl.exe -o toolbox.exe "https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/windows/amd64/toolbox.exe"
 ```
 
@@ -272,7 +272,7 @@ To install Toolbox as a binary on Windows ARM64 (Command Prompt):
 
 ```cmd
 :: see releases page for other versions
-set VERSION=1.7.0
+set VERSION=1.8.0
 curl -o toolbox.exe "https://storage.googleapis.com/mcp-toolbox-for-databases/v%VERSION%/windows/arm64/toolbox.exe"
 ```
 
@@ -282,7 +282,7 @@ To install Toolbox as a binary on Windows ARM64 (PowerShell):
 
 ```powershell
 # see releases page for other versions
-$VERSION = "1.7.0"
+$VERSION = "1.8.0"
 curl.exe -o toolbox.exe "https://storage.googleapis.com/mcp-toolbox-for-databases/v$VERSION/windows/arm64/toolbox.exe"
 ```
 
@@ -294,7 +294,7 @@ You can also install Toolbox as a container:
 
 ```sh
 # see releases page for other versions
-export VERSION=1.7.0
+export VERSION=1.8.0
 docker pull us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION
 ```
 
@@ -313,7 +313,7 @@ To install from source, ensure you have the latest version of
 [Go installed](https://go.dev/doc/install), and then run the following command:
 
 ```sh
-go install github.com/googleapis/mcp-toolbox@v1.7.0
+go install github.com/googleapis/mcp-toolbox@v1.8.0
 ```
 
 {{% /tab %}}
@@ -879,6 +879,7 @@ Toolbox is fully compatible with the Model Context Protocol (MCP) and maintains 
 ### Stable Releases
 The following official MCP specification versions are currently supported for production use:
 
+* `2026-07-28`
 * `2025-11-25`
 * `2025-06-18`
 * `2025-03-26`
@@ -897,7 +898,7 @@ test these forthcoming revisions before their official release using the
 
 To test these draft specifications, enable the startup flag and use this version
 string during negotiation:
-* `DRAFT-2026-v1`
+* No supported draft right now
 
 Description: Enables experimental support for upcoming draft MCP specifications,
 allowing you to test new schema standards and transport adjustments before they
@@ -1106,7 +1107,7 @@ In this section, we will download Toolbox, configure our tools in a
     <!-- {x-release-please-start-version} -->
     ```bash
     export OS="linux/amd64" # one of linux/amd64, darwin/arm64, darwin/amd64, windows/amd64, or windows/arm64
-    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/$OS/toolbox
+    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/$OS/toolbox
     ```
     <!-- {x-release-please-end} -->
 
@@ -4228,6 +4229,7 @@ parameters:
     description: The raw text content to be stored in the database.
   - name: vector_string
     type: string
+    description: A hidden parameter holding a copy of 'content' to be embedded as a vector.
     # This parameter is hidden from the LLM.
     # It automatically copies the value from 'content' and embeds it.
     valueFromParam: content
@@ -4657,7 +4659,7 @@ message will be displayed.
 
 
 
-The `skills-generate` command allows you to convert a **toolset** into an **Agent Skill**. A toolset is a collection of tools, and the generated skill will contain metadata and execution scripts for all tools within that toolset, complying with the [Agent Skill specification](https://agentskills.io/specification).
+The `skills-generate` command allows you to convert a **toolset** or a **[group](../groups/)** into an **Agent Skill**. The generated skill contains metadata and execution scripts for all tools in the collection, complying with the [Agent Skill specification](https://agentskills.io/specification).
 
 ## Before you begin
 
@@ -4676,6 +4678,7 @@ The basic syntax for the command is:
 ```bash
 toolbox <tool-source> skills-generate \
   --name <skill-name> \
+  --group <group-name> \
   --toolset <toolset-name> \
   --description <description> \
   --output-dir <output-directory> \
@@ -4684,8 +4687,9 @@ toolbox <tool-source> skills-generate \
 ```
 
 - `<tool-source>`: Can be `--config`, `--configs`, `--config-folder`, and `--prebuilt`. See the [CLI Reference](../../../reference/cli.md) for details.
-- `--name`: Name of the generated skill. When multiple toolsets are generated because `--toolset` is omitted, this name acts as a prefix for each skill folder (e.g., `<name>-<toolset>`).
-- `--description`: (Optional) Description of the generated skill.
+- `--name`: (Optional) Name of the generated skill. When multiple toolsets are generated because `--toolset` is omitted, this name acts as a prefix for each skill folder (e.g., `<name>-<toolset>`). When omitted in a single-skill mode, the name defaults, in order, to: the `--group` name, then the `--toolset` name, then the single `--prebuilt` config name. Any other case (a custom `--config`, or multiple `--prebuilt` configs) requires `--name`.
+- `--description`: (Optional) Description of the generated skill. When a [group](../groups/) defines its own `description`, that takes precedence and `--description` acts as a fallback for groups without one.
+- `--group`: (Optional) Name of the [group](../groups/) to convert into a single skill. Uses the group's `description`, falling back to `--description`. Mutually exclusive with `--toolset`.
 - `--toolset`: (Optional) Name of the toolset to convert into a skill. If not provided, one skill will be generated for every custom toolset defined. If no custom toolsets are defined, it defaults to a single skill containing all tools.
 - `--output-dir`: (Optional) Directory to output generated skills (default: "skills").
 - `--license-header`: (Optional) Optional license header to prepend to generated node scripts.
@@ -4743,13 +4747,33 @@ toolbox <tool-source> skills-generate \
 
    In this example, the skill contains two Node.js scripts (`tool_a.js` and `tool_b.js`), each mapping to a tool in the original toolset.
 
+### Example: Generating from a Group
+
+The `--group` flag generates a **single** skill from one named [group](../groups/), scoping the skill to that group's tools. This differs from `--toolset`, and the two flags are **mutually exclusive** — passing both is an error.
+
+Description resolution follows the group's metadata:
+
+- If the group defines a `description`, the generated skill uses it — this takes **precedence** over `--description`.
+- If the group has no `description`, the `--description` flag is used as a fallback.
+
+When `--name` is omitted, the skill is named after the group (e.g., `data_analyst`):
+
+```bash
+toolbox --config tools.yaml skills-generate \
+  --group "data_analyst" \
+  --description "Fallback description if the group has none"
+```
+
+{{< notice note >}}
+Sourcing the description from the group keeps the skill's description and the group's metadata in sync from a single place. To control the generated skill's description, set it on the group rather than passing `--description`.
+{{< /notice >}}
+
 ### Example: Prebuilt Configuration
 
-You can also generate skills from prebuilt toolsets:
+You can also generate skills from prebuilt configurations. When exactly one `--prebuilt` config is provided, `--name` is optional and defaults to the prebuilt config name, so no naming flags are required:
 
 ```bash
 toolbox --prebuilt alloydb-postgres-admin skills-generate \
-  --name "alloydb-postgres-admin" \
   --description "skill for performing administrative operations on alloydb"
 ```
 
@@ -5070,6 +5094,7 @@ The Toolbox SDKs can be combined with MCP clients in many cases.
 
 Toolbox currently supports the following versions of MCP specification:
 
+* [2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28)
 * [2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25)
 * [2025-06-18](https://modelcontextprotocol.io/specification/2025-06-18)
 * [2025-03-26](https://modelcontextprotocol.io/specification/2025-03-26)
@@ -11003,23 +11028,23 @@ After you install Looker in the MCP Store, resources and tools from the server a
 
 {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -11509,23 +11534,23 @@ expose your developer assistant tools to a MySQL instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -11839,23 +11864,23 @@ expose your developer assistant tools to a Neo4j instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -12166,23 +12191,23 @@ to expose your developer assistant tools to an Oracle instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -12515,23 +12540,23 @@ Omni](https://cloud.google.com/alloydb/omni/docs/overview).
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -12872,23 +12897,23 @@ instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -13202,23 +13227,23 @@ to expose your developer assistant tools to a SQLite instance:
    <!-- {x-release-please-start-version} -->
    {{< tabpane persist=header >}}
 {{< tab header="linux/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/linux/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/linux/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/arm64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/arm64/toolbox
 {{< /tab >}}
 
 {{< tab header="darwin/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/darwin/amd64/toolbox
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/darwin/amd64/toolbox
 {{< /tab >}}
 
 {{< tab header="windows/amd64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/amd64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/amd64/toolbox.exe
 {{< /tab >}}
 
 {{< tab header="windows/arm64" lang="bash" >}}
-curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/windows/arm64/toolbox.exe
+curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/windows/arm64/toolbox.exe
 {{< /tab >}}
 {{< /tabpane >}}
     <!-- {x-release-please-end} -->
@@ -17580,6 +17605,7 @@ project: "my-project-id"
 #   - "https://www.googleapis.com/auth/drive.readonly"
 # maxQueryResultRows: 50 # Optional: Limits the number of rows returned by queries. Defaults to 50.
 # maximumBytesBilled: 10737418240 # Optional: Per-query bytes scanned cap (in bytes).
+# apiEndpoint: "http://localhost:9050" # Optional: Override the BigQuery API endpoint (proxy or local emulator).
 ```
 
 Initialize a BigQuery source that uses the client's access token:
@@ -17601,6 +17627,7 @@ useClientOAuth: true
 #   - "https://www.googleapis.com/auth/drive.readonly"
 # maxQueryResultRows: 50 # Optional: Limits the number of rows returned by queries. Defaults to 50.
 # maximumBytesBilled: 10737418240 # Optional: Per-query bytes scanned cap (in bytes).
+# apiEndpoint: "http://localhost:9050" # Optional: Override the BigQuery API endpoint (proxy or local emulator).
 ```
 
 ## Reference
@@ -17617,6 +17644,7 @@ useClientOAuth: true
 | impersonateServiceAccount |  string  |    false     | Service account email to impersonate when making BigQuery and Dataplex API calls. The authenticated principal must have the `roles/iam.serviceAccountTokenCreator` role on the target service account. [Learn More](https://cloud.google.com/iam/docs/service-account-impersonation)                                                                                                                                                                                                                                |
 | maxQueryResultRows             |   int    |    false     | The maximum number of rows to return from a query. Defaults to 50. |
 | maximumBytesBilled             |  int64   |    false     | The maximum bytes billed per query. When set, queries that exceed this limit fail before executing. |
+| apiEndpoint                    |  string  |    false     | Override the BigQuery API endpoint. |
 
 
 
@@ -19488,6 +19516,11 @@ In this section, we will download Toolbox, configure our tools in a
     *   `BIGQUERY_MAXIMUM_BYTES_BILLED`: (Optional) Per-query bytes scanned cap
         (in bytes). Queries that exceed this limit fail before executing and
         cost nothing.
+    *   `BIGQUERY_ENDPOINT`: (Optional) Override the BigQuery API endpoint to
+        route traffic through a corporate proxy or a local emulator. Both
+        `http://` and `https://` schemes are supported (e.g.,
+        `http://localhost:9050`). When unset, the default Google API endpoint
+        is used.
 *   **Permissions:**
     *   **BigQuery User** (`roles/bigquery.user`) to execute queries and view
         metadata.
@@ -19618,6 +19651,709 @@ instance: "test-instance"
 
 
 ========================================================================
+## bigtable-create-cluster
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-create-cluster
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-create-cluster/
+**Description:** The "bigtable-create-cluster" tool allows you to create a new bigtable cluster in an instance.
+
+
+## About
+
+Create a new Bigtable cluster in an instance.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-create-cluster` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+- **`cluster_id`** (string): The ID of the cluster
+- **`zone`** (string): The zone for the cluster (e.g. us-central1-b)
+- **`num_nodes`** (integer): The number of nodes to allocate
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_create_cluster
+type: bigtable-create-cluster
+source: my-bigtable-source
+description: Create a new Bigtable cluster in an instance.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-create-cluster`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-create-instance
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-create-instance
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-create-instance/
+**Description:** The "bigtable-create-instance" tool allows you to create a new bigtable instance.
+
+
+## About
+
+Create a new Bigtable instance.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-create-instance` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance to create
+- **`display_name`** (string): Display name for the instance
+- **`cluster_id`** (string): The ID of the primary cluster
+- **`zone`** (string): The zone for the cluster (e.g. us-central1-b)
+- **`num_nodes`** (integer): The number of nodes for the cluster
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_create_instance
+type: bigtable-create-instance
+source: my-bigtable-source
+description: Create a new Bigtable instance.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-create-instance`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-create-logical-view
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-create-logical-view
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-create-logical-view/
+**Description:** The "bigtable-create-logical-view" tool allows you to create a new bigtable logical view.
+
+
+## About
+
+Create a new Bigtable logical view.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-create-logical-view` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+- **`logical_view_id`** (string): The ID of the logical view
+- **`query`** (string): The logical view query
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_create_logical_view
+type: bigtable-create-logical-view
+source: my-bigtable-source
+description: Create a new Bigtable logical view.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-create-logical-view`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-create-table
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-create-table
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-create-table/
+**Description:** The "bigtable-create-table" tool allows you to create a new bigtable table.
+
+
+## About
+
+Create a new Bigtable table.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-create-table` accepts the following parameters:
+
+- **`table_id`** (string): The ID of the table to create
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_create_table
+type: bigtable-create-table
+source: my-bigtable-source
+description: Create a new Bigtable table.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-create-table`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-delete-cluster
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-delete-cluster
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-delete-cluster/
+**Description:** The "bigtable-delete-cluster" tool allows you to delete a bigtable cluster.
+
+
+## About
+
+Delete a Bigtable cluster.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-delete-cluster` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+- **`cluster_id`** (string): The ID of the cluster
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_delete_cluster
+type: bigtable-delete-cluster
+source: my-bigtable-source
+description: Delete a Bigtable cluster.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-delete-cluster`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-delete-instance
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-delete-instance
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-delete-instance/
+**Description:** The "bigtable-delete-instance" tool allows you to delete a bigtable instance.
+
+
+## About
+
+Delete a Bigtable instance.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-delete-instance` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance to delete
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_delete_instance
+type: bigtable-delete-instance
+source: my-bigtable-source
+description: Delete a Bigtable instance.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-delete-instance`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-delete-logical-view
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-delete-logical-view
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-delete-logical-view/
+**Description:** The "bigtable-delete-logical-view" tool allows you to delete a bigtable logical view.
+
+
+## About
+
+Delete a Bigtable logical view.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-delete-logical-view` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+- **`logical_view_id`** (string): The ID of the logical view
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_delete_logical_view
+type: bigtable-delete-logical-view
+source: my-bigtable-source
+description: Delete a Bigtable logical view.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-delete-logical-view`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-delete-table
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-delete-table
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-delete-table/
+**Description:** The "bigtable-delete-table" tool allows you to delete a bigtable table.
+
+
+## About
+
+Delete a Bigtable table.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-delete-table` accepts the following parameters:
+
+- **`table_id`** (string): The ID of the table to delete
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_delete_table
+type: bigtable-delete-table
+source: my-bigtable-source
+description: Delete a Bigtable table.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-delete-table`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-get-cluster
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-get-cluster
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-get-cluster/
+**Description:** The "bigtable-get-cluster" tool allows you to get details of a bigtable cluster.
+
+
+## About
+
+Get details of a Bigtable cluster.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-get-cluster` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+- **`cluster_id`** (string): The ID of the cluster
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_get_cluster
+type: bigtable-get-cluster
+source: my-bigtable-source
+description: Get details of a Bigtable cluster.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-get-cluster`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-get-instance
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-get-instance
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-get-instance/
+**Description:** The "bigtable-get-instance" tool allows you to get details of a bigtable instance.
+
+
+## About
+
+Get details of a Bigtable instance.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-get-instance` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance to get
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_get_instance
+type: bigtable-get-instance
+source: my-bigtable-source
+description: Get details of a Bigtable instance.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-get-instance`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-get-logical-view
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-get-logical-view
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-get-logical-view/
+**Description:** The "bigtable-get-logical-view" tool allows you to get details of a bigtable logical view.
+
+
+## About
+
+Get details of a Bigtable logical view.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-get-logical-view` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+- **`logical_view_id`** (string): The ID of the logical view
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_get_logical_view
+type: bigtable-get-logical-view
+source: my-bigtable-source
+description: Get details of a Bigtable logical view.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-get-logical-view`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-get-table
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-get-table
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-get-table/
+**Description:** The "bigtable-get-table" tool allows you to get details of a bigtable table.
+
+
+## About
+
+Get details of a Bigtable table.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-get-table` accepts the following parameters:
+
+- **`table_id`** (string): The ID of the table to get
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_get_table
+type: bigtable-get-table
+source: my-bigtable-source
+description: Get details of a Bigtable table.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-get-table`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-list-clusters
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-list-clusters
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-list-clusters/
+**Description:** The "bigtable-list-clusters" tool allows you to list all bigtable clusters in the instance.
+
+
+## About
+
+List all Bigtable clusters in the instance.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-list-clusters` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_list_clusters
+type: bigtable-list-clusters
+source: my-bigtable-source
+description: List all Bigtable clusters in the instance.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-list-clusters`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-list-instances
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-list-instances
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-list-instances/
+**Description:** The "bigtable-list-instances" tool allows you to list all bigtable instances in the project.
+
+
+## About
+
+List all Bigtable instances in the project.
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_list_instances
+type: bigtable-list-instances
+source: my-bigtable-source
+description: List all Bigtable instances in the project.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-list-instances`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-list-logical-views
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-list-logical-views
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-list-logical-views/
+**Description:** The "bigtable-list-logical-views" tool allows you to list all bigtable logical views in the instance.
+
+
+## About
+
+List all Bigtable logical views in the instance.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-list-logical-views` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_list_logical_views
+type: bigtable-list-logical-views
+source: my-bigtable-source
+description: List all Bigtable logical views in the instance.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-list-logical-views`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-list-tables
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-list-tables
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-list-tables/
+**Description:** The "bigtable-list-tables" tool allows you to list all bigtable tables in the instance.
+
+
+## About
+
+List all Bigtable tables in the instance.
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_list_tables
+type: bigtable-list-tables
+source: my-bigtable-source
+description: List all Bigtable tables in the instance.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-list-tables`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
 ## bigtable-sql
 ========================================================================
 **Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-sql
@@ -19743,6 +20479,188 @@ templateParameters:
 [bigtable-logical-view]:
     https://cloud.google.com/bigtable/docs/create-manage-logical-views
 [bigtable-querybuilder]: https://cloud.google.com/bigtable/docs/query-builder
+
+
+
+
+========================================================================
+## bigtable-update-cluster
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-update-cluster
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-update-cluster/
+**Description:** The "bigtable-update-cluster" tool allows you to update the number of nodes in a bigtable cluster.
+
+
+## About
+
+Update the number of nodes in a Bigtable cluster.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-update-cluster` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+- **`cluster_id`** (string): The ID of the cluster
+- **`serve_nodes`** (integer): The new number of nodes to allocate
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_update_cluster
+type: bigtable-update-cluster
+source: my-bigtable-source
+description: Update the number of nodes in a Bigtable cluster.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-update-cluster`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-update-instance
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-update-instance
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-update-instance/
+**Description:** The "bigtable-update-instance" tool allows you to update an existing bigtable instance.
+
+
+## About
+
+Update an existing Bigtable instance.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-update-instance` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance to update
+- **`display_name`** (string): The new display name
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_update_instance
+type: bigtable-update-instance
+source: my-bigtable-source
+description: Update an existing Bigtable instance.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-update-instance`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-update-logical-view
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-update-logical-view
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-update-logical-view/
+**Description:** The "bigtable-update-logical-view" tool allows you to update an existing bigtable logical view.
+
+
+## About
+
+Update an existing Bigtable logical view.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-update-logical-view` accepts the following parameters:
+
+- **`instance_id`** (string): The ID of the instance
+- **`logical_view_id`** (string): The ID of the logical view
+- **`query`** (string): The new logical view query
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_update_logical_view
+type: bigtable-update-logical-view
+source: my-bigtable-source
+description: Update an existing Bigtable logical view.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-update-logical-view`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## bigtable-update-table
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Bigtable > Tools > bigtable-update-table
+**URL:** https://mcp-toolbox.dev/dev/integrations/bigtable/tools/bigtable-update-table/
+**Description:** The "bigtable-update-table" tool allows you to update an existing bigtable table's configuration.
+
+
+## About
+
+Update an existing Bigtable table's configuration.
+
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Parameters
+
+`bigtable-update-table` accepts the following parameters:
+
+- **`table_id`** (string): The ID of the table to update
+- **`disable_change_stream`** (boolean): Disable change stream
+
+## Example
+
+```yaml
+kind: tool
+name: bigtable_update_table
+type: bigtable-update-table
+source: my-bigtable-source
+description: Update an existing Bigtable table's configuration.
+```
+
+## Reference
+
+| **field** | **type** | **required** | **description** |
+|-----------|----------|--------------|-----------------|
+| type | string | true | Must be `bigtable-update-table`. |
+| source | string | true | Name of the source to execute on. |
+| description | string | false | Description of the tool that is passed to the LLM. |
 
 
 
@@ -20198,11 +21116,12 @@ CREATE TABLE documents (
 Define the embedding model:
 
 ```yaml
-embeddingModels:
-  gemini-model:
-    kind: gemini
-    model: gemini-embedding-001
-    dimension: 768
+kind: embeddingModel
+name: gemini-model
+type: gemini
+apiKey: ${GOOGLE_API_KEY}
+model: gemini-embedding-001
+dimension: 768
 ```
 
 Define an ingestion tool that embeds `content` before insert by mirroring it
@@ -20249,7 +21168,7 @@ parameters:
 ```
 
 Only `string`-typed parameters may declare `embeddedBy`. The embedding model
-must be defined under the top-level `embeddingModels:` key of the same
+must be defined as an `embeddingModel` kind of the same
 configuration file.
 
 ## Reference
@@ -25433,49 +26352,51 @@ CockroachDB Cloud clusters require SSL/TLS connections. Use the `queryParams` se
 ## Example
 
 ```yaml
-sources:
-  my_cockroachdb:
-    type: cockroachdb
-    host: your-cluster.cockroachlabs.cloud
-    port: "26257"
-    user: myuser
-    password: mypassword
-    database: defaultdb
-    maxRetries: 5
-    retryBaseDelay: 500ms
-    queryParams:
-      sslmode: require
-      application_name: my-app
-    
-    # MCP Security Settings (recommended for production)
-    readOnlyMode: true          # Read-only by default (MCP best practice)
-    enableWriteMode: false      # Set to true to allow write operations
-    maxRowLimit: 1000           # Limit query results
-    queryTimeoutSec: 30         # Prevent long-running queries
-    enableTelemetry: true       # Enable observability
-    telemetryVerbose: false     # Set true for detailed logs
-    clusterID: "my-cluster"     # Optional identifier
+kind: source
+name: my_cockroachdb
+type: cockroachdb
+host: your-cluster.cockroachlabs.cloud
+port: "26257"
+user: myuser
+password: mypassword
+database: defaultdb
+maxRetries: 5
+retryBaseDelay: 500ms
+queryParams:
+  sslmode: require
+  application_name: my-app
 
-tools:
-  list_expenses:
-    type: cockroachdb-sql
-    source: my_cockroachdb
-    description: List all expenses
-    statement: SELECT id, description, amount, category FROM expenses WHERE user_id = $1
-    parameters:
-      - name: user_id
-        type: string
-        description: The user's ID
-  
-  describe_expenses:
-    type: cockroachdb-describe-table
-    source: my_cockroachdb
-    description: Describe the expenses table schema
-  
-  list_expenses_indexes:
-    type: cockroachdb-list-indexes
-    source: my_cockroachdb
-    description: List indexes on the expenses table
+# MCP Security Settings (recommended for production)
+readOnlyMode: true          # Read-only by default (MCP best practice)
+enableWriteMode: false      # Set to true to allow write operations
+maxRowLimit: 1000           # Limit query results
+queryTimeoutSec: 30         # Prevent long-running queries
+enableTelemetry: true       # Enable observability
+telemetryVerbose: false     # Set true for detailed logs
+clusterID: "my-cluster"     # Optional identifier
+---
+kind: tool
+name: list_expenses
+type: cockroachdb-sql
+source: my_cockroachdb
+description: List all expenses
+statement: SELECT id, description, amount, category FROM expenses WHERE user_id = $1
+parameters:
+  - name: user_id
+    type: string
+    description: The user's ID
+---
+kind: tool
+name: describe_expenses
+type: cockroachdb-describe-table
+source: my_cockroachdb
+description: Describe the expenses table schema
+---
+kind: tool
+name: list_expenses_indexes
+type: cockroachdb-list-indexes
+source: my_cockroachdb
+description: List indexes on the expenses table
 ```
 
 ## Reference
@@ -25532,19 +26453,19 @@ Common query parameters for CockroachDB connections:
 **Read-Only by Default**: The integration follows MCP best practices by defaulting to read-only mode. This prevents accidental data modifications:
 
 ```yaml
-sources:
-  my_cockroachdb:
-    readOnlyMode: true        # Default behavior
-    enableWriteMode: false    # Explicit write opt-in required
+kind: source
+name: my_cockroachdb
+readOnlyMode: true        # Default behavior
+enableWriteMode: false    # Explicit write opt-in required
 ```
 
 To enable write operations:
 
 ```yaml
-sources:
-  my_cockroachdb:
-    readOnlyMode: false       # Disable read-only protection
-    enableWriteMode: true     # Explicitly allow writes
+kind: source
+name: my_cockroachdb
+readOnlyMode: false       # Disable read-only protection
+enableWriteMode: true     # Explicitly allow writes
 ```
 
 **Query Limits**: Automatic row limits prevent excessive data retrieval:
@@ -25673,22 +26594,22 @@ The tool accepts a single runtime parameter:
 ## Example
 
 ```yaml
-sources:
-  my_cockroachdb:
-    type: cockroachdb
-    host: your-cluster.cockroachlabs.cloud
-    port: "26257"
-    user: myuser
-    password: mypassword
-    database: defaultdb
-    queryParams:
-      sslmode: require
-
-tools:
-  execute_sql:
-    type: cockroachdb-execute-sql
-    source: my_cockroachdb
-    description: Execute any SQL statement against the CockroachDB database
+kind: source
+name: my_cockroachdb
+type: cockroachdb
+host: your-cluster.cockroachlabs.cloud
+port: "26257"
+user: myuser
+password: mypassword
+database: defaultdb
+queryParams:
+  sslmode: require
+---
+kind: tool
+name: execute_sql
+type: cockroachdb-execute-sql
+source: my_cockroachdb
+description: Execute any SQL statement against the CockroachDB database
 ```
 
 ### Usage Examples
@@ -25847,13 +26768,13 @@ Never expose this tool directly to end users without proper authorization contro
 Configure the `authRequired` field to restrict access:
 
 ```yaml
-tools:
-  execute_sql:
-    type: cockroachdb-execute-sql
-    source: my_cockroachdb
-    description: Execute SQL statements
-    authRequired:
-      - my-auth-service
+kind: tool
+name: execute_sql
+type: cockroachdb-execute-sql
+source: my_cockroachdb
+description: Execute SQL statements
+authRequired:
+  - my-auth-service
 ```
 
 #### Read-Only Users
@@ -25960,22 +26881,22 @@ To query objects within schemas, the user needs:
 ## Example
 
 ```yaml
-sources:
-  my_cockroachdb:
-    type: cockroachdb
-    host: your-cluster.cockroachlabs.cloud
-    port: "26257"
-    user: myuser
-    password: mypassword
-    database: defaultdb
-    queryParams:
-      sslmode: require
-
-tools:
-  list_schemas:
-    type: cockroachdb-list-schemas
-    source: my_cockroachdb
-    description: List all schemas in the database
+kind: source
+name: my_cockroachdb
+type: cockroachdb
+host: your-cluster.cockroachlabs.cloud
+port: "26257"
+user: myuser
+password: mypassword
+database: defaultdb
+queryParams:
+  sslmode: require
+---
+kind: tool
+name: list_schemas
+type: cockroachdb-list-schemas
+source: my_cockroachdb
+description: List all schemas in the database
 ```
 ### Usage Example
 
@@ -26095,13 +27016,13 @@ CREATE TABLE tenant_globex.orders (...);
 The `cockroachdb-list-schemas` tool helps discover all tenant schemas:
 
 ```yaml
-tools:
-  list_tenants:
-    type: cockroachdb-list-schemas
-    source: my_cockroachdb
-    description: |
-      List all tenant schemas in the database.
-      Each schema represents a separate tenant's data namespace.
+kind: tool
+name: list_tenants
+type: cockroachdb-list-schemas
+source: my_cockroachdb
+description: |
+  List all tenant schemas in the database.
+  Each schema represents a separate tenant's data namespace.
 ```
 
 ### Best Practices
@@ -26146,18 +27067,19 @@ REVOKE ALL ON SCHEMA hr FROM public;
 #### Combined with List Tables
 
 ```yaml
-tools:
-  list_schemas:
-    type: cockroachdb-list-schemas
-    source: my_cockroachdb
-    description: List all schemas first
-    
-  list_tables:
-    type: cockroachdb-list-tables
-    source: my_cockroachdb
-    description: |
-      List tables in the database.
-      Use list_schemas first to understand schema organization.
+kind: tool
+name: list_schemas
+type: cockroachdb-list-schemas
+source: my_cockroachdb
+description: List all schemas first
+---
+kind: tool
+name: list_tables
+type: cockroachdb-list-tables
+source: my_cockroachdb
+description: |
+  List tables in the database.
+  Use list_schemas first to understand schema organization.
 ```
 
 #### Schema Discovery Workflow
@@ -26171,37 +27093,37 @@ tools:
 #### Discover Database Structure
 
 ```yaml
-tools:
-  discover_schemas:
-    type: cockroachdb-list-schemas
-    source: my_cockroachdb
-    description: |
-      Discover how the database is organized into schemas.
-      Use this to understand the logical grouping of tables.
+kind: tool
+name: discover_schemas
+type: cockroachdb-list-schemas
+source: my_cockroachdb
+description: |
+  Discover how the database is organized into schemas.
+  Use this to understand the logical grouping of tables.
 ```
 
 #### Multi-Tenant Analysis
 
 ```yaml
-tools:
-  list_tenant_schemas:
-    type: cockroachdb-list-schemas
-    source: my_cockroachdb
-    description: |
-      List all tenant schemas (each tenant has their own schema).
-      Schema names follow the pattern: tenant_<company_name>
+kind: tool
+name: list_tenant_schemas
+type: cockroachdb-list-schemas
+source: my_cockroachdb
+description: |
+  List all tenant schemas (each tenant has their own schema).
+  Schema names follow the pattern: tenant_<company_name>
 ```
 
 #### Schema Migration Planning
 
 ```yaml
-tools:
-  audit_schemas:
-    type: cockroachdb-list-schemas
-    source: my_cockroachdb
-    description: |
-      Audit existing schemas before migration.
-      Identifies all schemas that need to be migrated.
+kind: tool
+name: audit_schemas
+type: cockroachdb-list-schemas
+source: my_cockroachdb
+description: |
+  Audit existing schemas before migration.
+  Identifies all schemas that need to be migrated.
 ```
 
 ### CockroachDB-Specific Features
@@ -26277,22 +27199,22 @@ The tool accepts optional runtime parameters:
 ## Example
 
 ```yaml
-sources:
-  my_cockroachdb:
-    type: cockroachdb
-    host: your-cluster.cockroachlabs.cloud
-    port: "26257"
-    user: myuser
-    password: mypassword
-    database: defaultdb
-    queryParams:
-      sslmode: require
-
-tools:
-  list_all_tables:
-    type: cockroachdb-list-tables
-    source: my_cockroachdb
-    description: List all user tables in the database with their structure
+kind: source
+name: my_cockroachdb
+type: cockroachdb
+host: your-cluster.cockroachlabs.cloud
+port: "26257"
+user: myuser
+password: mypassword
+database: defaultdb
+queryParams:
+  sslmode: require
+---
+kind: tool
+name: list_all_tables
+type: cockroachdb-list-tables
+source: my_cockroachdb
+description: List all user tables in the database with their structure
 ```
 
 ### Usage Examples
@@ -26478,13 +27400,13 @@ Returns comprehensive table information:
 The tool is ideal for helping AI assistants understand your database structure:
 
 ```yaml
-tools:
-  discover_schema:
-    type: cockroachdb-list-tables
-    source: my_cockroachdb
-    description: |
-      Use this tool first to understand the database schema before generating queries.
-      It shows all tables, their columns, data types, and relationships.
+kind: tool
+name: discover_schema
+type: cockroachdb-list-tables
+source: my_cockroachdb
+description: |
+  Use this tool first to understand the database schema before generating queries.
+  It shows all tables, their columns, data types, and relationships.
 ```
 
 #### Filter Large Schemas
@@ -26523,21 +27445,21 @@ Only user-created tables in the public schema (and other user schemas) are retur
 #### Prompt Example
 
 ```yaml
-tools:
-  list_tables:
-    type: cockroachdb-list-tables
-    source: my_cockroachdb
-    description: |
-      Lists all tables in the database with detailed schema information.
-      Use this tool to understand:
-      - What tables exist
-      - What columns each table has
-      - Data types and constraints
-      - Relationships between tables (foreign keys)
-      - Available indexes
-      
-      Always call this tool before generating SQL queries to ensure
-      you use correct table and column names.
+kind: tool
+name: list_tables
+type: cockroachdb-list-tables
+source: my_cockroachdb
+description: |
+  Lists all tables in the database with detailed schema information.
+  Use this tool to understand:
+  - What tables exist
+  - What columns each table has
+  - Data types and constraints
+  - Relationships between tables (foreign keys)
+  - Available indexes
+
+  Always call this tool before generating SQL queries to ensure
+  you use correct table and column names.
 ```
 
 ### Common Use Cases
@@ -26628,32 +27550,32 @@ Parameters allow you to safely pass values into your SQL queries using prepared 
 ### Example with Multiple Parameters
 
 ```yaml
-tools:
-  filter_expenses:
-    type: cockroachdb-sql
-    source: my_cockroachdb
-    description: Filter expenses by category and date range
-    statement: |
-      SELECT id, description, amount, category, expense_date
-      FROM expenses
-      WHERE user_id = $1
-        AND category = $2
-        AND expense_date >= $3
-        AND expense_date <= $4
-      ORDER BY expense_date DESC
-    parameters:
-      - name: user_id
-        type: string
-        description: The user's UUID
-      - name: category
-        type: string
-        description: Expense category (e.g., "Food", "Transport")
-      - name: start_date
-        type: string
-        description: Start date in YYYY-MM-DD format
-      - name: end_date
-        type: string
-        description: End date in YYYY-MM-DD format
+kind: tool
+name: filter_expenses
+type: cockroachdb-sql
+source: my_cockroachdb
+description: Filter expenses by category and date range
+statement: |
+  SELECT id, description, amount, category, expense_date
+  FROM expenses
+  WHERE user_id = $1
+    AND category = $2
+    AND expense_date >= $3
+    AND expense_date <= $4
+  ORDER BY expense_date DESC
+parameters:
+  - name: user_id
+    type: string
+    description: The user's UUID
+  - name: category
+    type: string
+    description: Expense category (e.g., "Food", "Transport")
+  - name: start_date
+    type: string
+    description: Start date in YYYY-MM-DD format
+  - name: end_date
+    type: string
+    description: End date in YYYY-MM-DD format
 ```
 
 ### Template Parameters
@@ -26663,57 +27585,57 @@ Template parameters enable dynamic query construction by replacing placeholders 
 #### Example with Template Parameters
 
 ```yaml
-tools:
-  get_column_data:
-    type: cockroachdb-sql
-    source: my_cockroachdb
-    description: Get data from a specific column
-    statement: |
-      SELECT {{column_name}}
-      FROM {{table_name}}
-      WHERE user_id = $1
-      LIMIT 100
-    templateParameters:
-      - name: table_name
-        type: string
-        description: The table to query
-      - name: column_name
-        type: string
-        description: The column to retrieve
-    parameters:
-      - name: user_id
-        type: string
-        description: The user's UUID
+kind: tool
+name: get_column_data
+type: cockroachdb-sql
+source: my_cockroachdb
+description: Get data from a specific column
+statement: |
+  SELECT {{column_name}}
+  FROM {{table_name}}
+  WHERE user_id = $1
+  LIMIT 100
+templateParameters:
+  - name: table_name
+    type: string
+    description: The table to query
+  - name: column_name
+    type: string
+    description: The column to retrieve
+parameters:
+  - name: user_id
+    type: string
+    description: The user's UUID
 ```
 
 ## Example
 
 ```yaml
-sources:
-  my_cockroachdb:
-    type: cockroachdb
-    host: your-cluster.cockroachlabs.cloud
-    port: "26257"
-    user: myuser
-    password: mypassword
-    database: defaultdb
-    queryParams:
-      sslmode: require
-
-tools:
-  get_user_orders:
-    type: cockroachdb-sql
-    source: my_cockroachdb
-    description: Get all orders for a specific user
-    statement: |
-      SELECT o.id, o.order_date, o.total_amount, o.status
-      FROM orders o
-      WHERE o.user_id = $1
-      ORDER BY o.order_date DESC
-    parameters:
-      - name: user_id
-        type: string
-        description: The UUID of the user
+kind: source
+name: my_cockroachdb
+type: cockroachdb
+host: your-cluster.cockroachlabs.cloud
+port: "26257"
+user: myuser
+password: mypassword
+database: defaultdb
+queryParams:
+  sslmode: require
+---
+kind: tool
+name: get_user_orders
+type: cockroachdb-sql
+source: my_cockroachdb
+description: Get all orders for a specific user
+statement: |
+  SELECT o.id, o.order_date, o.total_amount, o.status
+  FROM orders o
+  WHERE o.user_id = $1
+  ORDER BY o.order_date DESC
+parameters:
+  - name: user_id
+    type: string
+    description: The UUID of the user
 ```
 
 ## Reference
@@ -26768,22 +27690,22 @@ CockroachDB supports standard SQL JOINs. Keep joins efficient by:
 - Limiting result sets with WHERE clauses
 
 ```yaml
-tools:
-  get_user_with_orders:
-    type: cockroachdb-sql
-    source: my_cockroachdb
-    description: Get user details with their recent orders
-    statement: |
-      SELECT u.name, u.email, o.id as order_id, o.order_date, o.total_amount
-      FROM users u
-      LEFT JOIN orders o ON u.id = o.user_id
-      WHERE u.id = $1
-      ORDER BY o.order_date DESC
-      LIMIT 10
-    parameters:
-      - name: user_id
-        type: string
-        description: The user's UUID
+kind: tool
+name: get_user_with_orders
+type: cockroachdb-sql
+source: my_cockroachdb
+description: Get user details with their recent orders
+statement: |
+  SELECT u.name, u.email, o.id as order_id, o.order_date, o.total_amount
+  FROM users u
+  LEFT JOIN orders o ON u.id = o.user_id
+  WHERE u.id = $1
+  ORDER BY o.order_date DESC
+  LIMIT 10
+parameters:
+  - name: user_id
+    type: string
+    description: The user's UUID
 ```
 
 ### Handle NULL Values
@@ -26799,82 +27721,82 @@ WHERE user_id = $1
 ### Aggregations
 
 ```yaml
-tools:
-  expense_summary:
-    type: cockroachdb-sql
-    source: my_cockroachdb
-    description: Get expense summary by category for a user
-    statement: |
-      SELECT 
-        category,
-        COUNT(*) as count,
-        SUM(amount) as total_amount,
-        AVG(amount) as avg_amount
-      FROM expenses
-      WHERE user_id = $1
-        AND expense_date >= $2
-      GROUP BY category
-      ORDER BY total_amount DESC
-    parameters:
-      - name: user_id
-        type: string
-        description: The user's UUID
-      - name: start_date
-        type: string
-        description: Start date in YYYY-MM-DD format
+kind: tool
+name: expense_summary
+type: cockroachdb-sql
+source: my_cockroachdb
+description: Get expense summary by category for a user
+statement: |
+  SELECT 
+    category,
+    COUNT(*) as count,
+    SUM(amount) as total_amount,
+    AVG(amount) as avg_amount
+  FROM expenses
+  WHERE user_id = $1
+    AND expense_date >= $2
+  GROUP BY category
+  ORDER BY total_amount DESC
+parameters:
+  - name: user_id
+    type: string
+    description: The user's UUID
+  - name: start_date
+    type: string
+    description: Start date in YYYY-MM-DD format
 ```
 
 ### Window Functions
 
 ```yaml
-tools:
-  running_total:
-    type: cockroachdb-sql
-    source: my_cockroachdb
-    description: Get running total of expenses
-    statement: |
-      SELECT 
-        expense_date,
-        amount,
-        SUM(amount) OVER (ORDER BY expense_date) as running_total
-      FROM expenses
-      WHERE user_id = $1
-      ORDER BY expense_date
-    parameters:
-      - name: user_id
-        type: string
-        description: The user's UUID
+kind: tool
+name: running_total
+type: cockroachdb-sql
+source: my_cockroachdb
+description: Get running total of expenses
+statement: |
+  SELECT 
+    expense_date,
+    amount,
+    SUM(amount) OVER (ORDER BY expense_date) as running_total
+  FROM expenses
+  WHERE user_id = $1
+  ORDER BY expense_date
+parameters:
+  - name: user_id
+    type: string
+    description: The user's UUID
 ```
 
 ### Common Table Expressions (CTEs)
 
 ```yaml
-tools:
-  top_spenders:
-    type: cockroachdb-sql
-    source: my_cockroachdb
-    description: Find top spending users
-    statement: |
-      WITH user_totals AS (
-        SELECT 
-          user_id,
-          SUM(amount) as total_spent
-        FROM expenses
-        WHERE expense_date >= $1
-        GROUP BY user_id
-      )
-      SELECT 
-        u.name,
-        u.email,
-        ut.total_spent
-      FROM user_totals ut
-      JOIN users u ON ut.user_id = u.id
-      ORDER BY ut.total_spent DESC
-      LIMIT 10
-    parameters:
-      - name: start_date
-        type: string
-        description: Start date in YYYY-MM-DD format
+kind: tool
+name: top_spenders
+type: cockroachdb-sql
+source: my_cockroachdb
+description: Find top spending users
+statement: |
+  WITH user_totals AS (
+    SELECT 
+      user_id,
+      SUM(amount) as total_spent
+    FROM expenses
+    WHERE expense_date >= $1
+    GROUP BY user_id
+  )
+  SELECT 
+    u.name,
+    u.email,
+    ut.total_spent
+  FROM user_totals ut
+  JOIN users u ON ut.user_id = u.id
+  ORDER BY ut.total_spent DESC
+  LIMIT 10
+parameters:
+  - name: start_date
+    type: string
+    description: Start date in YYYY-MM-DD format
 ```
 
 
@@ -30596,24 +31518,24 @@ It's compatible with the following sources:
 ## Example
 
 ```yaml
-tools:
-  ask_data_agent:
-    kind: conversational-analytics-ask-data-agent
-    source: my-conversational-analytics-source
-    location: global
-    maxResults: 50
-    description: |
-      Perform natural language data analysis and get insights by interacting 
-      with a specific BigQuery Data Agent. This tool allows for conversational 
-      queries and provides detailed responses based on the agent's configured 
-      data sources.
+kind: tool
+name: ask_data_agent
+type: conversational-analytics-ask-data-agent
+source: my-conversational-analytics-source
+location: global
+maxResults: 50
+description: |
+  Perform natural language data analysis and get insights by interacting 
+  with a specific BigQuery Data Agent. This tool allows for conversational 
+  queries and provides detailed responses based on the agent's configured 
+  data sources.
 ```
 
 ## Reference
 
 | **field**   | **type** | **required** | **description**                                    |
 |-------------|:--------:|:------------:|----------------------------------------------------|
-| kind        |  string  |     true     | Must be "conversational-analytics-ask-data-agent". |
+| type        |  string  |     true     | Must be "conversational-analytics-ask-data-agent". |
 | source      |  string  |     true     | Name of the source for chat.                       |
 | description |  string  |     true     | Description of the tool that is passed to the LLM. |
 | location    |  string  |    false     | The Google Cloud location (default: "global").     |
@@ -30646,20 +31568,20 @@ It's compatible with the following sources:
 ## Example
 
 ```yaml
-tools:
-  get_agent_info:
-    kind: conversational-analytics-get-data-agent-info
-    source: my-conversational-analytics-source
-    location: global
-    description: |
-      Use this tool to get details about a specific data agent.
+kind: tool
+name: get_agent_info
+type: conversational-analytics-get-data-agent-info
+source: my-conversational-analytics-source
+location: global
+description: |
+  Use this tool to get details about a specific data agent.
 ```
 
 ## Reference
 
 | **field**   | **type** | **required** | **description**                                    |
 |-------------|:--------:|:------------:|----------------------------------------------------|
-| kind        |  string  |     true     | Must be "conversational-analytics-get-data-agent-info". |
+| type        |  string  |     true     | Must be "conversational-analytics-get-data-agent-info". |
 | source      |  string  |     true     | Name of the source.                                |
 | description |  string  |     true     | Description of the tool that is passed to the LLM. |
 | location    |  string  |    false     | The Google Cloud location (default: "global").     |
@@ -30689,20 +31611,20 @@ It's compatible with the following sources:
 ## Example
 
 ```yaml
-tools:
-  list_agents:
-    kind: conversational-analytics-list-accessible-data-agents
-    source: my-conversational-analytics-source
-    location: global
-    description: |
-      Use this tool to list available data agents.
+kind: tool
+name: list_agents
+type: conversational-analytics-list-accessible-data-agents
+source: my-conversational-analytics-source
+location: global
+description: |
+  Use this tool to list available data agents.
 ```
 
 ## Reference
 
 | **field**   | **type** | **required** | **description**                                    |
 |-------------|:--------:|:------------:|----------------------------------------------------|
-| kind        |  string  |     true     | Must be "conversational-analytics-list-accessible-data-agents". |
+| type        |  string  |     true     | Must be "conversational-analytics-list-accessible-data-agents". |
 | source      |  string  |     true     | Name of the source.                                |
 | description |  string  |     true     | Description of the tool that is passed to the LLM. |
 | location    |  string  |    false     | The Google Cloud location (default: "global").     |
@@ -31605,6 +32527,28 @@ This abbreviated syntax works for the qualified predicates except for `label` in
 ### Response
 1. Present the location ID and operation ID returned immediately by the tool call.
 2. Poll the returned operation using the `get_operation` tool until completion at intervals of ~5 seconds.
+
+## Tool: update_data_product_aspects
+### Request
+1. Use this tool to update metadata aspects (like `overview` or `contacts`) on an existing Data Product Entry.
+2. You must provide `locationId`, `dataProductId`, and `aspects`.
+3. The `aspects` parameter is an array of aspects. Each aspect contains:
+   - `projectId` (string, required): The project ID of the aspect type (use `"dataplex-types"` for system aspects).
+   - `locationId` (string, required): The location ID of the aspect type (use `"global"` for system aspects).
+   - `aspectTypeId` (string, required): The name of the aspect type (e.g. `"overview"` or `"refresh-cadence"`).
+   - `data` (object, required): The aspect payload details.
+     - For `"overview"` (documentation), the `data` object accepts: `content` (string, required, markdown or text), `contentType` (string, optional, `MARKDOWN` or `HTML`), and `links` (array of objects with `url` and `title`).
+     - For `"refresh-cadence"` (contract), the `data` object accepts: `frequency` (string, required: `Daily`, `Weekly`, `Monthly`, etc.), `refreshTime` (string, optional, e.g. `"09:00 PST"`), `thresholdInMinutes` (int, optional), and `cronSchedule` (string, optional).
+### Response
+1. Present the updated entry details including `name`, `entrySource`, `entryType`, and the list of updated `aspects` (each containing `projectId`, `locationId`, `aspectTypeId`, and `data`).
+
+## Tool: get_operation
+### Request
+1. Use this tool to retrieve the status of an asynchronous long-running operation (LRO) like scan creation or data product/asset creation/updation.
+2. You must provide `operationName`, a fully-qualified operation name string having format `projects/{projectId}/locations/{locationId}/operations/{operationId}`.
+### Response
+1. Present whether the operation is done (`done: true` or `done: false`).
+2. Once the operation is completed (`done: true`), the response result will contain either an error (if it failed), or the created/updated resource (like `DataScan`, `DataProduct`, or `DataAsset`).
 ```
 
 
@@ -31690,6 +32634,162 @@ description: Trigger a new data quality scan.
 | type        |  string  |     true     | Must be "dataplex-check-data-quality".                   |
 | source      |  string  |     true     | Name of the source the tool should execute on.     |
 | description |  string  |     true     | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## dataplex-create-data-asset
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-create-data-asset
+**URL:** https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-create-data-asset/
+**Description:** A "dataplex-create-data-asset" tool creates a new Data Asset under an existing Data Product in Knowledge Catalog.
+
+
+
+## About
+
+A `dataplex-create-data-asset` tool creates a new Data Asset under a Data Product in Knowledge Catalog (formerly known as Dataplex). This is a long-running operation, and the tool returns immediately with the operation's location ID and operation ID.
+
+View the [Data Products guide][guide] for more information.
+
+[guide]: https://docs.cloud.google.com/dataplex/docs/data-products-overview
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Requirements
+
+### IAM Permissions
+
+Knowledge Catalog uses [Identity and Access Management (IAM)][iam-overview] to control
+user and group access to Knowledge Catalog resources. Toolbox will use your
+[Application Default Credentials (ADC)][adc] to authorize and authenticate when
+interacting with [Knowledge Catalog][dataplex-docs].
+
+In addition to [setting the ADC for your server][set-adc], you need to ensure
+the IAM identity has been given the correct IAM permissions for the tasks you
+intend to perform. See [Knowledge Catalog IAM permissions][iam-permissions]
+and [Knowledge Catalog IAM roles][iam-roles] for more information on
+applying IAM permissions and roles to an identity.
+
+[iam-overview]: https://cloud.google.com/dataplex/docs/iam-and-access-control
+[adc]: https://cloud.google.com/docs/authentication#adc
+[set-adc]: https://cloud.google.com/docs/authentication/provide-credentials-adc
+[iam-permissions]: https://cloud.google.com/dataplex/docs/iam-permissions
+[iam-roles]: https://cloud.google.com/dataplex/docs/iam-roles
+[dataplex-docs]: https://cloud.google.com/dataplex
+
+## Parameters
+
+The `dataplex-create-data-asset` tool accepts the following parameters:
+
+| **field**          | **type** | **required** | **description**                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------ | -------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| locationId         | string   | true         | The location ID (e.g. `us`, `us-central1`) where the parent Data Product is located.                                                                                                                                                                                                                                                                                        |
+| dataProductId      | string   | true         | The unique ID of the parent Data Product.                                                                                                                                                                                                                                                                                                                                   |
+| dataAssetId        | string   | true         | The unique ID of the Data Asset to create.                                                                                                                                                                                                                                                                                                                                  |
+| resourceUri        | string   | true         | The URI of the physical resource associated with the Data Asset (e.g. `//bigquery.googleapis.com/projects/my-project/datasets/my-dataset/tables/my-table`).                                                                                                                                                                                                                 |
+| labels             | map      | false        | The labels associated with the Data Asset. Keys and values must be strings.                                                                                                                                                                                                                                                                                                 |
+| accessGroupConfigs | map      | false        | Map of access group configurations to associate with the Data Asset. Keys represent the access group ID, and the value is a list of string IAM role names (e.g. `{"test-group": ["roles/bigquery.dataViewer"]}`). To find the list of supported roles that can be granted on the resource, refer to the [roles:queryGrantableRoles][query-grantable-roles-docs] API method. |
+
+[query-grantable-roles-docs]: https://cloud.google.com/iam/docs/reference/rest/v1/roles/queryGrantableRoles
+
+## Example
+
+```yaml
+kind: tool
+name: create_data_asset
+type: dataplex-create-data-asset
+source: my-dataplex-source
+description: Use this tool to create a Data Asset.
+```
+
+## Reference
+
+| **field**   | **type** | **required** | **description**                                    |
+| ----------- | -------- | ------------ | -------------------------------------------------- |
+| type        | string   | true         | Must be "dataplex-create-data-asset".              |
+| source      | string   | true         | Name of the source the tool should execute on.     |
+| description | string   | true         | Description of the tool that is passed to the LLM. |
+
+
+
+
+========================================================================
+## dataplex-create-data-product
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-create-data-product
+**URL:** https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-create-data-product/
+**Description:** A "dataplex-create-data-product" tool allows to create a new Data Product.
+
+
+
+## About
+
+A `dataplex-create-data-product` tool creates a new Data Product in Knowledge Catalog (formerly known as Dataplex). This is a long-running operation, and the tool returns immediately with the operation's location ID and operation ID.
+
+View the [Data Products guide][guide] for more information.
+
+[guide]: https://docs.cloud.google.com/dataplex/docs/data-products-overview
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Requirements
+
+### IAM Permissions
+
+Knowledge Catalog uses [Identity and Access Management (IAM)][iam-overview] to control
+user and group access to Knowledge Catalog resources. Toolbox will use your
+[Application Default Credentials (ADC)][adc] to authorize and authenticate when
+interacting with [Knowledge Catalog][dataplex-docs].
+
+In addition to [setting the ADC for your server][set-adc], you need to ensure
+the IAM identity has been given the correct IAM permissions for the tasks you
+intend to perform. See [Knowledge Catalog IAM permissions][iam-permissions]
+and [Knowledge Catalog IAM roles][iam-roles] for more information on
+applying IAM permissions and roles to an identity.
+
+[iam-overview]: https://cloud.google.com/dataplex/docs/iam-and-access-control
+[adc]: https://cloud.google.com/docs/authentication#adc
+[set-adc]: https://cloud.google.com/docs/authentication/provide-credentials-adc
+[iam-permissions]: https://cloud.google.com/dataplex/docs/iam-permissions
+[iam-roles]: https://cloud.google.com/dataplex/docs/iam-roles
+[dataplex-docs]: https://cloud.google.com/dataplex
+
+## Parameters
+
+The `dataplex-create-data-product` tool accepts the following parameters:
+
+| **field**     | **type**         | **required** | **description**                                                                                                                                                                                            |
+| ------------- | ---------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| locationId    | string           | true         | The location ID (e.g. `us`, `us-central1`) where the Data Product should be created.                                                                                                                       |
+| dataProductId | string           | false        | The unique ID of the Data Product to create. If not specified, the backend will auto-generate a unique ID.                                                                                                 |
+| displayName   | string           | true         | The display name of the Data Product.                                                                                                                                                                      |
+| description   | string           | false        | The description of the Data Product.                                                                                                                                                                       |
+| ownerEmails   | array of strings | true         | The list of owner emails for the Data Product.                                                                                                                                                             |
+| accessGroups  | array of objects | false        | List of access groups to associate with the Data Product. Each group object can contain: `id` (required), `displayName` (required), `description`, and at least one of `googleGroup` and `serviceAccount`. |
+
+## Example
+
+```yaml
+kind: tool
+name: create_data_product
+type: dataplex-create-data-product
+source: my-dataplex-source
+description: Use this tool to create a Data Product.
+```
+
+## Reference
+
+| **field**   | **type** | **required** | **description**                                    |
+| ----------- | -------- | ------------ | -------------------------------------------------- |
+| type        | string   | true         | Must be "dataplex-create-data-product".            |
+| source      | string   | true         | Name of the source the tool should execute on.     |
+| description | string   | true         | Description of the tool that is passed to the LLM. |
 
 
 
@@ -32362,11 +33462,12 @@ description: Fetch results of a completed metadata discovery scan.
 
 ## About
 
-A `dataplex-get-operation` tool retrieves the status of a Dataplex long-running operation (LRO) like scan creation.
+A `dataplex-get-operation` tool retrieves the status of a Dataplex long-running operation (LRO) (such as scan creation, data product creation/update, or data asset creation/update).
 
-Poll this tool until the `done` field from the response is `true`. Once completed, the `response` field will contain the created DataScan resource, from which you can extract the `scanId` (the last part of the `name` field, e.g. `nq-doc-1234`) to pass to `get_run_status` and get results.
-WARNING: This only tracks the creation of the scan template, NOT the actual background execution.
+Poll this tool until the `done` field from the response is `true`. Once completed, the `response` field will contain the details of the created or updated resource (such as `DataScan`, `DataProduct`, or `DataAsset`). 
+For scan template creation, you can extract the `scanId` (the last part of the `name` field, e.g. `nq-doc-1234`) to pass to `get_run_status` and retrieve execution results.
 
+WARNING: For scans, this only tracks the creation of the scan template, NOT the actual background execution.
 
 ## Compatible Sources
 
@@ -32397,9 +33498,9 @@ applying IAM permissions and roles to an identity.
 
 The `dataplex-get-operation` tool accepts the following parameters:
 
-| **field** | **type** | **required** | **description** |
-| --------- | :------: | :----------: | --------------- |
-| operationName | string | true | The full operation resource name (format: `projects/{project}/locations/{location}/operations/{operation_id}`). |
+| **field**     | **type** | **required** | **description**                                                                                                    |
+| ------------- | :------: | :----------: | ------------------------------------------------------------------------------------------------------------------ |
+| operationName |  string  |     true     | The full operation resource name (format: `projects/{projectId}/locations/{locationId}/operations/{operationId}`). |
 
 ## Example
 
@@ -32414,8 +33515,8 @@ description: Check the status of a long-running scan template creation.
 ## Reference
 
 | **field**   | **type** | **required** | **description**                                    |
-|-------------|:--------:|:------------:|----------------------------------------------------|
-| type        |  string  |     true     | Must be "dataplex-get-operation".                   |
+| ----------- | :------: | :----------: | -------------------------------------------------- |
+| type        |  string  |     true     | Must be "dataplex-get-operation".                  |
 | source      |  string  |     true     | Name of the source the tool should execute on.     |
 | description |  string  |     true     | Description of the tool that is passed to the LLM. |
 
@@ -32914,8 +34015,8 @@ The `dataplex-search-dq-scans` tool accepts the following optional parameters:
 ## Example
 
 ```yaml
-kind: tools
-name: dataplex-search-dq-scans
+kind: tool
+name: search_dq_scans
 type: dataplex-search-dq-scans
 source: my-dataplex-source
 description: Use this tool to search for data quality scans.
@@ -33000,162 +34101,6 @@ description: Use this tool to get all the entries based on the provided query.
 | type        |  string  |     true     | Must be "dataplex-search-entries".                 |
 | source      |  string  |     true     | Name of the source the tool should execute on.     |
 | description |  string  |     true     | Description of the tool that is passed to the LLM. |
-
-
-
-
-========================================================================
-## dataplex-create-data-asset
-========================================================================
-**Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-create-data-asset
-**URL:** https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-create-data-asset/
-**Description:** A "dataplex-create-data-asset" tool creates a new Data Asset under an existing Data Product in Knowledge Catalog.
-
-
-
-## About
-
-A `dataplex-create-data-asset` tool creates a new Data Asset under a Data Product in Knowledge Catalog (formerly known as Dataplex). This is a long-running operation, and the tool returns immediately with the operation's location ID and operation ID.
-
-View the [Data Products guide][guide] for more information.
-
-[guide]: https://docs.cloud.google.com/dataplex/docs/data-products-overview
-
-## Compatible Sources
-
-{{< compatible-sources >}}
-
-## Requirements
-
-### IAM Permissions
-
-Knowledge Catalog uses [Identity and Access Management (IAM)][iam-overview] to control
-user and group access to Knowledge Catalog resources. Toolbox will use your
-[Application Default Credentials (ADC)][adc] to authorize and authenticate when
-interacting with [Knowledge Catalog][dataplex-docs].
-
-In addition to [setting the ADC for your server][set-adc], you need to ensure
-the IAM identity has been given the correct IAM permissions for the tasks you
-intend to perform. See [Knowledge Catalog IAM permissions][iam-permissions]
-and [Knowledge Catalog IAM roles][iam-roles] for more information on
-applying IAM permissions and roles to an identity.
-
-[iam-overview]: https://cloud.google.com/dataplex/docs/iam-and-access-control
-[adc]: https://cloud.google.com/docs/authentication#adc
-[set-adc]: https://cloud.google.com/docs/authentication/provide-credentials-adc
-[iam-permissions]: https://cloud.google.com/dataplex/docs/iam-permissions
-[iam-roles]: https://cloud.google.com/dataplex/docs/iam-roles
-[dataplex-docs]: https://cloud.google.com/dataplex
-
-## Parameters
-
-The `dataplex-create-data-asset` tool accepts the following parameters:
-
-| **field**          | **type** | **required** | **description**                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------ | -------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| locationId         | string   | true         | The location ID (e.g. `us`, `us-central1`) where the parent Data Product is located.                                                                                                                                                                                                                                                                                        |
-| dataProductId      | string   | true         | The unique ID of the parent Data Product.                                                                                                                                                                                                                                                                                                                                   |
-| dataAssetId        | string   | true         | The unique ID of the Data Asset to create.                                                                                                                                                                                                                                                                                                                                  |
-| resourceUri        | string   | true         | The URI of the physical resource associated with the Data Asset (e.g. `//bigquery.googleapis.com/projects/my-project/datasets/my-dataset/tables/my-table`).                                                                                                                                                                                                                 |
-| labels             | map      | false        | The labels associated with the Data Asset. Keys and values must be strings.                                                                                                                                                                                                                                                                                                 |
-| accessGroupConfigs | map      | false        | Map of access group configurations to associate with the Data Asset. Keys represent the access group ID, and the value is a list of string IAM role names (e.g. `{"test-group": ["roles/bigquery.dataViewer"]}`). To find the list of supported roles that can be granted on the resource, refer to the [roles:queryGrantableRoles][query-grantable-roles-docs] API method. |
-
-[query-grantable-roles-docs]: https://cloud.google.com/iam/docs/reference/rest/v1/roles/queryGrantableRoles
-
-## Example
-
-```yaml
-kind: tool
-name: create_data_asset
-type: dataplex-create-data-asset
-source: my-dataplex-source
-description: Use this tool to create a Data Asset.
-```
-
-## Reference
-
-| **field**   | **type** | **required** | **description**                                    |
-| ----------- | -------- | ------------ | -------------------------------------------------- |
-| type        | string   | true         | Must be "dataplex-create-data-asset".              |
-| source      | string   | true         | Name of the source the tool should execute on.     |
-| description | string   | true         | Description of the tool that is passed to the LLM. |
-
-
-
-
-========================================================================
-## dataplex-create-data-product
-========================================================================
-**Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-create-data-product
-**URL:** https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-create-data-product/
-**Description:** A "dataplex-create-data-product" tool allows to create a new Data Product.
-
-
-
-## About
-
-A `dataplex-create-data-product` tool creates a new Data Product in Knowledge Catalog (formerly known as Dataplex). This is a long-running operation, and the tool returns immediately with the operation's location ID and operation ID.
-
-View the [Data Products guide][guide] for more information.
-
-[guide]: https://docs.cloud.google.com/dataplex/docs/data-products-overview
-
-## Compatible Sources
-
-{{< compatible-sources >}}
-
-## Requirements
-
-### IAM Permissions
-
-Knowledge Catalog uses [Identity and Access Management (IAM)][iam-overview] to control
-user and group access to Knowledge Catalog resources. Toolbox will use your
-[Application Default Credentials (ADC)][adc] to authorize and authenticate when
-interacting with [Knowledge Catalog][dataplex-docs].
-
-In addition to [setting the ADC for your server][set-adc], you need to ensure
-the IAM identity has been given the correct IAM permissions for the tasks you
-intend to perform. See [Knowledge Catalog IAM permissions][iam-permissions]
-and [Knowledge Catalog IAM roles][iam-roles] for more information on
-applying IAM permissions and roles to an identity.
-
-[iam-overview]: https://cloud.google.com/dataplex/docs/iam-and-access-control
-[adc]: https://cloud.google.com/docs/authentication#adc
-[set-adc]: https://cloud.google.com/docs/authentication/provide-credentials-adc
-[iam-permissions]: https://cloud.google.com/dataplex/docs/iam-permissions
-[iam-roles]: https://cloud.google.com/dataplex/docs/iam-roles
-[dataplex-docs]: https://cloud.google.com/dataplex
-
-## Parameters
-
-The `dataplex-create-data-product` tool accepts the following parameters:
-
-| **field**     | **type**         | **required** | **description**                                                                                                                                                                                            |
-| ------------- | ---------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| locationId    | string           | true         | The location ID (e.g. `us`, `us-central1`) where the Data Product should be created.                                                                                                                       |
-| dataProductId | string           | false        | The unique ID of the Data Product to create. If not specified, the backend will auto-generate a unique ID.                                                                                                 |
-| displayName   | string           | true         | The display name of the Data Product.                                                                                                                                                                      |
-| description   | string           | false        | The description of the Data Product.                                                                                                                                                                       |
-| ownerEmails   | array of strings | true         | The list of owner emails for the Data Product.                                                                                                                                                             |
-| accessGroups  | array of objects | false        | List of access groups to associate with the Data Product. Each group object can contain: `id` (required), `displayName` (required), `description`, and at least one of `googleGroup` and `serviceAccount`. |
-
-## Example
-
-```yaml
-kind: tool
-name: create_data_product
-type: dataplex-create-data-product
-source: my-dataplex-source
-description: Use this tool to create a Data Product.
-```
-
-## Reference
-
-| **field**   | **type** | **required** | **description**                                    |
-| ----------- | -------- | ------------ | -------------------------------------------------- |
-| type        | string   | true         | Must be "dataplex-create-data-product".            |
-| source      | string   | true         | Name of the source the tool should execute on.     |
-| description | string   | true         | Description of the tool that is passed to the LLM. |
 
 
 
@@ -33318,6 +34263,125 @@ description: Use this tool to update a Data Product.
 
 
 ========================================================================
+## dataplex-update-data-product-aspects
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Tools > dataplex-update-data-product-aspects
+**URL:** https://mcp-toolbox.dev/dev/integrations/knowledge-catalog/tools/knowledge-catalog-update-data-product-aspects/
+**Description:** A "dataplex-update-data-product-aspects" tool updates aspects for an existing Data Product Entry in Knowledge Catalog.
+
+
+
+## About
+
+A `dataplex-update-data-product-aspects` tool updates aspects on an existing Data Product Entry in Knowledge Catalog (formerly known as Dataplex). This tool operates on the catalog entry associated with the Data Product, allowing you to add or modify metadata aspects in a single request. 
+
+View the [Data Products guide][guide] for more information.
+
+[guide]: https://docs.cloud.google.com/dataplex/docs/data-products-overview
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Requirements
+
+### IAM Permissions
+
+Knowledge Catalog uses [Identity and Access Management (IAM)][iam-overview] to control
+user and group access to Knowledge Catalog resources. Toolbox will use your
+[Application Default Credentials (ADC)][adc] to authorize and authenticate when
+interacting with [Knowledge Catalog][dataplex-docs].
+
+In addition to [setting the ADC for your server][set-adc], you need to ensure
+the IAM identity has been given the correct IAM permissions for the tasks you
+intend to perform. See [Knowledge Catalog IAM permissions][iam-permissions]
+and [Knowledge Catalog IAM roles][iam-roles] for more information on
+applying IAM permissions and roles to an identity.
+
+[iam-overview]: https://cloud.google.com/dataplex/docs/iam-and-access-control
+[adc]: https://cloud.google.com/docs/authentication#adc
+[set-adc]: https://cloud.google.com/docs/authentication/provide-credentials-adc
+[iam-permissions]: https://cloud.google.com/dataplex/docs/iam-permissions
+[iam-roles]: https://cloud.google.com/dataplex/docs/iam-roles
+[dataplex-docs]: https://cloud.google.com/dataplex
+
+## Parameters
+
+The `dataplex-update-data-product-aspects` tool accepts the following parameters:
+
+| **field**     | **type**         | **required** | **description**                                                                                                                                                                                                                                            |
+| ------------- | ---------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| locationId    | string           | true         | The location ID (e.g. `us`, `us-central1`) of the Data Product.                                                                                                                                                                                         |
+| dataProductId | string           | true         | The unique ID of the Data Product.                                                                                                                                                                                                                      |
+| aspects       | array of objects | true         | The list of aspects to add or update on the Data Product Entry. Each object contains `projectId` (string, required), `locationId` (string, required), `aspectTypeId` (string, required), and `data` (object, optional, JSON map of the aspect details). |
+
+### Aspect Object Fields
+
+Each object in the `aspects` array must have the following fields:
+
+*   **`projectId`**: The project ID of the aspect type. The value is `"dataplex-types"` for system aspects (like `overview` and `refresh-cadence`).
+*   **`locationId`**: The location of the aspect type. The value is `"global"` for system aspects (like `overview` and `refresh-cadence`).
+*   **`aspectTypeId`**: The unique name of the aspect type (e.g. `"overview"` or `"refresh-cadence"`).
+*   **`data`**: The JSON payload conforming to the aspect type's schema:
+    *   **System `overview` (Documentation) Schema**:
+        *   `content` (string, required): The detailed documentation content (markdown or plain text).
+        *   `contentType` (string, optional): The content type format. Values: `MARKDOWN`, `HTML`.
+        *   `links` (array of objects, optional): List of relevant URL links. Each link object contains `url` (string, required) and `title` (string, optional).
+    *   **System `refresh-cadence` (Contract) Schema**:
+        *   `frequency` (string, required): How often the data is updated. Values: `Daily`, `Weekly`, `Monthly`, `Quarterly`, `Half-Yearly`, `Yearly`.
+        *   `refreshTime` (string, optional): Time of day when the data is updated (e.g. `"09:00 PST"`).
+        *   `thresholdInMinutes` (int, optional): Delinquency threshold in minutes (e.g. `15`).
+        *   `cronSchedule` (string, optional): Optional cron schedule expression (e.g. `"0 * * * *"`).
+
+## Example
+
+```yaml
+kind: tool
+name: update_data_product_aspects
+type: dataplex-update-data-product-aspects
+source: my-dataplex-source
+description: Use this tool to update aspects (like overview or contacts) on a Data Product Entry.
+```
+
+## Output Format
+
+The tool returns the updated catalog entry details and aspects:
+
+```json
+{
+  "locationId": "us",
+  "dataProductId": "my-data-product",
+  "entrySource": {
+    "resource": "projects/...",
+    "displayName": "My Data Product Resource",
+    "description": "Resource details"
+  },
+  "entryType": "projects/dataplex-types/locations/global/entryTypes/data-product",
+  "aspects": [
+    {
+      "projectId": "dataplex-types",
+      "locationId": "global",
+      "aspectTypeId": "overview",
+      "data": {
+        "content": "Updated description content"
+      }
+    }
+  ]
+}
+```
+
+## Reference
+
+| **field**   | **type** | **required** | **description**                                      |
+| ----------- | -------- | ------------ | ---------------------------------------------------- |
+| type        | string   | true         | Must be "dataplex-update-data-product-aspects".      |
+| source      | string   | true         | Name of the source the tool should execute on.       |
+| description | string   | true         | Description of the tool that is passed to the LLM.   |
+
+
+
+
+========================================================================
 ## Prebuilt Configs
 ========================================================================
 **Hierarchy:** MCP Toolbox for Databases > Integrations > Knowledge Catalog > Prebuilt Configs
@@ -33359,6 +34423,7 @@ description: Use this tool to update a Data Product.
     *   `update_data_product`: Updates an existing Data Product.
     *   `create_data_asset`: Creates a new Data Asset under a Data Product.
     *   `update_data_asset`: Updates an existing Data Asset under a Data Product.
+    *   `update_data_product_aspects`: Updates aspects (like documentation or contracts) on a Data Product Entry.
     *   `generate_data_insights`: Creates a new Dataplex Data Documentation scan template and triggers the run.
     *   `get_data_insights`: Retrieves the final generated data insights for a completed scan.
     *   `generate_data_profile`: Creates a new Dataplex Data Profile scan template and triggers the run.
@@ -33371,7 +34436,7 @@ description: Use this tool to update a Data Product.
     *   `get_run_status`: Retrieves the execution status of the latest background job run.
 *   **Toolsets:**
     *   `discovery`: Metadata discovery and search toolset (`search_entries`, `lookup_entry`, `search_aspect_types`, `lookup_context`, `search_dq_scans`).
-    *   `data-products`: Data Products and Data Assets curation and management toolset (`search_entries`, `lookup_entry`, `search_aspect_types`, `lookup_context`, `list_data_products`, `get_data_product`, `list_data_assets`, `get_data_asset`, `create_data_product`, `update_data_product`, `create_data_asset`, `update_data_asset`).
+    *   `data-products`: Data Products and Data Assets curation and management toolset (`search_entries`, `lookup_entry`, `search_aspect_types`, `lookup_context`, `list_data_products`, `get_data_product`, `list_data_assets`, `get_data_asset`, `create_data_product`, `update_data_product`, `create_data_asset`, `update_data_asset`, `update_data_product_aspects`, `get_operation`).
     *   `enrich`: Metadata enrichment pipeline orchestration and execution toolset (`search_entries`, `lookup_entry`, `lookup_context`, `generate_data_insights`, `get_data_insights`, `generate_data_profile`, `get_data_profile`, `discover_metadata`, `get_discovery_results`, `check_data_quality`, `get_data_quality_results`, `get_operation`, `get_run_status`).
 
 
@@ -37115,7 +38180,7 @@ In this section, we will download Toolbox and run the Toolbox server.
     <!-- {x-release-please-start-version} -->
     ```bash
     export OS="linux/amd64" # one of linux/amd64, darwin/arm64, darwin/amd64, windows/amd64, or windows/arm64
-    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/$OS/toolbox
+    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/$OS/toolbox
     ```
     <!-- {x-release-please-end} -->
 
@@ -37276,7 +38341,7 @@ In this section, we will download Toolbox and run the Toolbox server.
     <!-- {x-release-please-start-version} -->
     ```bash
     export OS="linux/amd64" # one of linux/amd64, darwin/arm64, darwin/amd64, windows/amd64, or windows/arm64
-    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/$OS/toolbox
+    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/$OS/toolbox
     ```
     <!-- {x-release-please-end} -->
 
@@ -37399,7 +38464,7 @@ In this section, we will download Toolbox and run the Toolbox server.
     <!-- {x-release-please-start-version} -->
     ```bash
     export OS="linux/amd64" # one of linux/amd64, darwin/arm64, darwin/amd64, windows/amd64, or windows/arm64
-    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.7.0/$OS/toolbox
+    curl -O https://storage.googleapis.com/mcp-toolbox-for-databases/v1.8.0/$OS/toolbox
     ```
     <!-- {x-release-please-end} -->
 
@@ -39272,7 +40337,7 @@ This tool takes 3 optional input parameters:
 ## Example
 
 ```yaml
-kind: tools
+kind: tool
 name: list_all_locks
 type: mysql-list-all-locks
 source: my-mysql-instance
@@ -39420,7 +40485,7 @@ This tool takes 4 optional input parameters:
 ## Example
 
 ```yaml
-kind: tools
+kind: tool
 name: list_table_stats
 type: mysql-list-table-stats
 source: my-mysql-instance
@@ -39604,7 +40669,7 @@ This tool takes 2 optional input parameters:
 ## Example
 
 ```yaml
-kind: tools
+kind: tool
 name: show_query_stats
 type: mysql-show-query-stats
 source: my-mysql-instance
@@ -39961,12 +41026,14 @@ Neo4j supports vector similarity search. When using an `embeddingModel` with a `
 
 See [EmbeddingModels](../../../documentation/configuration/embedding-models/_index.md) for more information.
 
+```yaml
 kind: embeddingModel
 name: gemini-model
 type: gemini
 model: gemini-embedding-001
 apiKey: ${GOOGLE_API_KEY}
 dimension: 768
+```
 
 #### Vector Ingestion Tool
 
@@ -40880,9 +41947,46 @@ instead of hardcoding your secrets into the configuration file.
 
 
 ========================================================================
-## list_tables
+## oracle-execute-sql
 ========================================================================
-**Hierarchy:** MCP Toolbox for Databases > Integrations > Oracle > Tools > list_tables
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Oracle > Tools > oracle-execute-sql
+**URL:** https://mcp-toolbox.dev/dev/integrations/oracle/tools/oracle-execute-sql/
+**Description:** An "oracle-execute-sql" tool executes a SQL statement against an Oracle database.
+
+
+
+## About
+
+An `oracle-execute-sql` tool executes a SQL statement against an Oracle
+database.
+
+`oracle-execute-sql` takes one input parameter `sql` and runs the sql
+statement against the `source`.
+
+> **Note:** This tool is intended for developer assistant workflows with
+> human-in-the-loop and shouldn't be used for production agents.
+
+## Compatible Sources
+
+{{< compatible-sources >}}
+
+## Example
+
+```yaml
+kind: tool
+name: execute_sql_tool
+type: oracle-execute-sql
+source: my-oracle-instance
+description: Use this tool to execute sql statement.
+```
+
+
+
+
+========================================================================
+## oracle-list-tables
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Integrations > Oracle > Tools > oracle-list-tables
 **URL:** https://mcp-toolbox.dev/dev/integrations/oracle/tools/oracle-list-tables/
 **Description:** Lists all tables in the current user's schema
 
@@ -40915,50 +42019,14 @@ field to `false`.
 > names, or other parts of the query.
 
 ```yaml
-tools:
-  list_tables:
-    kind: oracle-sql
-    source: my-oracle-instance
-    statement: |
-      SELECT table_name from user_tables;
-    description: |
-      Lists all table names in the current user's schema.
-
-
-
-
-========================================================================
-## oracle-execute-sql
-========================================================================
-**Hierarchy:** MCP Toolbox for Databases > Integrations > Oracle > Tools > oracle-execute-sql
-**URL:** https://mcp-toolbox.dev/dev/integrations/oracle/tools/oracle-execute-sql/
-**Description:** An "oracle-execute-sql" tool executes a SQL statement against an Oracle database.
-
-
-
-## About
-
-An `oracle-execute-sql` tool executes a SQL statement against an Oracle
-database.
-
-`oracle-execute-sql` takes one input parameter `sql` and runs the sql
-statement against the `source`.
-
-> **Note:** This tool is intended for developer assistant workflows with
-> human-in-the-loop and shouldn't be used for production agents.
-
-## Compatible Sources
-
-{{< compatible-sources >}}
-
-## Example
-
-```yaml
 kind: tool
-name: execute_sql_tool
-type: oracle-execute-sql
+name: list_tables
+type: oracle-sql
 source: my-oracle-instance
-description: Use this tool to execute sql statement.
+statement: |
+  SELECT table_name from user_tables;
+description: |
+  Lists all table names in the current user's schema.
 ```
 
 
@@ -41000,49 +42068,50 @@ field to `false`.
 > names, or other parts of the query.
 
 ```yaml
-tools:
-  search_flights_by_number:
-    kind: oracle-sql
-    source: my-oracle-instance
-    statement: |
-      SELECT * FROM flights
-      WHERE airline = :1
-      AND flight_number = :2
-      FETCH FIRST 10 ROWS ONLY
-    description: |
-      Use this tool to get information for a specific flight.
-      Takes an airline code and flight number and returns info on the flight.
-      Do NOT use this tool with a flight id. Do NOT guess an airline code or flight number.
-      Example:
-      {{
-          "airline": "CY",
-          "flight_number": "888",
-      }}
-    parameters:
-      - name: airline
-        type: string
-        description: Airline unique 2 letter identifier
-      - name: flight_number
-        type: string
-        description: 1 to 4 digit number
-
-  update_flight_status:
-    kind: oracle-sql
-    source: my-oracle-instance
-    readOnly: false  # Required for INSERT/UPDATE/DELETE
-    statement: |
-      UPDATE flights 
-      SET status = :1 
-      WHERE airline = :2 AND flight_number = :3
-    description: Updates the status of a specific flight.
-    parameters:
-      - name: status
-        type: string
-      - name: airline
-        type: string
-      - name: flight_number
-        type: string
-
+kind: tool
+name: search_flights_by_number
+type: oracle-sql
+source: my-oracle-instance
+statement: |
+  SELECT * FROM flights
+  WHERE airline = :1
+  AND flight_number = :2
+  FETCH FIRST 10 ROWS ONLY
+description: |
+  Use this tool to get information for a specific flight.
+  Takes an airline code and flight number and returns info on the flight.
+  Do NOT use this tool with a flight id. Do NOT guess an airline code or flight number.
+  Example:
+  {{
+      "airline": "CY",
+      "flight_number": "888",
+  }}
+parameters:
+  - name: airline
+    type: string
+    description: Airline unique 2 letter identifier
+  - name: flight_number
+    type: string
+    description: 1 to 4 digit number
+---
+kind: tool
+name: update_flight_status
+type: oracle-sql
+source: my-oracle-instance
+readOnly: false  # Required for INSERT/UPDATE/DELETE
+statement: |
+  UPDATE flights 
+  SET status = :1 
+  WHERE airline = :2 AND flight_number = :3
+description: Updates the status of a specific flight.
+parameters:
+  - name: status
+    type: string
+  - name: airline
+    type: string
+  - name: flight_number
+    type: string
+```
 
 
 
@@ -44236,7 +45305,7 @@ queryTimeout: 30s # Optional: query timeout duration
 ### With SSL required
 
 ```yaml
-kind: sources
+kind: source
 name: my-singlestore-source
 type: singlestore
 host: svc-abc123.svc.singlestore.com
@@ -44251,7 +45320,7 @@ connectionParams:
 ### With SSL verification disabled
 
 ```yaml
-kind: sources
+kind: source
 name: my-singlestore-source
 type: singlestore
 host: svc-abc123.svc.singlestore.com
@@ -44266,7 +45335,7 @@ connectionParams:
 ### Without SSL
 
 ```yaml
-kind: sources
+kind: source
 name: my-singlestore-source
 type: singlestore
 host: 127.0.0.1
@@ -48118,7 +49187,7 @@ For more detailed instructions, see [Invoke Tools via CLI](../documentation/conf
 <details>
 <summary><code>skills-generate</code></summary>
 
-Generates a skill package from a specified toolset. Each tool in the toolset will have a corresponding Node.js execution script in the generated skill.
+Generates a skill package from a specified toolset or group. Each tool in the collection will have a corresponding Node.js execution script in the generated skill.
 
 **Syntax:**
 
@@ -48128,8 +49197,9 @@ toolbox skills-generate --name <name> --description <description> --toolset <too
 
 **Flags:**
 
-- `--name`: Name of the generated skill. When multiple toolsets are generated because `--toolset` is omitted, this name acts as a prefix for each skill folder (e.g., `<name>-<toolset>`).
-- `--description`: (Optional) Description of the generated skill.
+- `--name`: (Optional) Name of the generated skill. When multiple toolsets are generated because `--toolset` is omitted, this name acts as a prefix for each skill folder (e.g., `<name>-<toolset>`). When omitted in a single-skill mode, the name defaults, in order, to: the `--group` name, then the `--toolset` name, then the single `--prebuilt` config name; any other case requires `--name`.
+- `--description`: (Optional) Description of the generated skill. When a group defines its own `description`, that takes precedence and `--description` acts as a fallback.
+- `--group`: (Optional) Name of the group to convert into a single skill. Uses the group's `description`, falling back to `--description`. Mutually exclusive with `--toolset`.
 - `--toolset`: (Optional) Name of the toolset to convert into a skill. If not provided, one skill will be generated for every custom toolset defined. If no custom toolsets are defined, it defaults to a single skill containing all tools.
 - `--output-dir`: (Optional) Directory to output generated skills (default: "skills").
 - `--license-header`: (Optional) Optional license header to prepend to generated node scripts.
