@@ -3159,7 +3159,7 @@ human-in-the-loop and shouldn&amp;rsquo;t be used for production agents.&lt;/p&g
 &lt;p&gt;The &lt;code&gt;cloud-gemini-data-analytics-query&lt;/code&gt; tool allows you to send natural language questions to the Gemini Data Analytics API and receive structured responses containing SQL queries, natural language answers, and explanations. For details on defining data agent context for database data sources, see the official &lt;a href="https://docs.cloud.google.com/gemini/docs/conversational-analytics-api/data-agent-authored-context-databases"&gt;documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;[!NOTE]
-Only &lt;code&gt;alloydb&lt;/code&gt;, &lt;code&gt;spannerReference&lt;/code&gt;, and &lt;code&gt;cloudSqlReference&lt;/code&gt; are supported as &lt;a href="https://clouddocs.devsite.corp.google.com/gemini/docs/conversational-analytics-api/reference/rest/v1beta/projects.locations.dataAgents#DatasourceReferences"&gt;datasource references&lt;/a&gt;.&lt;/p&gt;
+Only &lt;code&gt;alloydb&lt;/code&gt;, &lt;code&gt;spannerReference&lt;/code&gt;, and &lt;code&gt;cloudSqlReference&lt;/code&gt; are supported as &lt;a href="https://cloud.google.com/gemini/docs/conversational-analytics-api/reference/rest/v1beta/projects.locations.dataAgents#DatasourceReferences"&gt;datasource references&lt;/a&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id="compatible-sources"&gt;Compatible Sources&lt;/h2&gt;
 
@@ -11270,7 +11270,7 @@ returned. Otherwise, the selection is not guaranteed.&lt;/p&gt;
 &lt;p&gt;The tool returns a single JSON object representing the document, wrapped in a
 JSON array.&lt;/p&gt;
 &lt;h2 id="compatible-sources"&gt;Compatible Sources&lt;/h2&gt;
-&lt;h2 id="hahahugoshortcode463s0hbhb"&gt;
+&lt;h2 id="hahahugoshortcode452s0hbhb"&gt;
 
 
 
@@ -22526,7 +22526,7 @@ IAM authentication if unspecified.&lt;/li&gt;
 user. Defaults to IAM authentication if unspecified.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ALLOYDB_POSTGRES_IP_TYPE&lt;/code&gt;: (Optional) The IP type i.e. &amp;ldquo;Public&amp;rdquo; or
 &amp;ldquo;Private&amp;rdquo; (Default: Public).&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ALLOYDB_POSTGRES_READONLY&lt;/code&gt;: (Optional) When set to &lt;code&gt;true&lt;/code&gt;, enforces read-only execution at the database session level (&lt;code&gt;alloydb_session_read_only=locked&lt;/code&gt;) and suppresses write-capable tools. Default: &lt;code&gt;false&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ALLOYDB_POSTGRES_READONLY&lt;/code&gt;: (Optional) When set to &lt;code&gt;true&lt;/code&gt;, enforces read-only execution at the database session level (&lt;code&gt;alloydb_session_read_only=locked&lt;/code&gt;) and suppresses write-capable tools. If you encounter an unsupported parameter error, make sure your AlloyDB instance has Postgres version 17+. Default: &lt;code&gt;false&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Permissions:&lt;/strong&gt;
